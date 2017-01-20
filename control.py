@@ -19,12 +19,23 @@ def setUp:
     speed.start(30)
     pwm.start(0)
 
-pwm.start(7)  #center
-time.sleep(2)
-pwm.ChangeDutyCycle(5) #right
-time.sleep(2)
-pwm.ChangeDutyCycle(9) #left
-time.sleep(2)
-pwm.ChangeDutyCycle(7) #center
-time.sleep(2)
-GPIO.cleanup()
+def forward():
+    GPIO.output(in1, 1)
+    GPIO.output(in2, 0)
+
+def backward():
+    GPIO.output(in1, 0)
+    GPIO.output(in2, 1)
+
+def stop():
+    GPIO.output(in1, 0)
+    GPIO.output(in2, 0)
+
+def left():
+    pwm.ChangeDutyCycle(9) #left
+
+def right():
+    pwm.ChangeDutyCycle(5)
+
+def center():
+    pwm.ChangeDutyCycle(7) #center
