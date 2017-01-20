@@ -74,5 +74,20 @@ while x != chr(27): # till ESC is pressed
             right()
             steering = 2
 
+    if x == 'a':
+	if running == 2:
+	    stop()
+	    running = 1
+	else:
+	    forward()
+	    steering = 0
+   if x == 'd':
+	if running == 0:
+	    stop()
+	    running = 1
+	else:
+            backward()
+	    running = 2
+
 termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_settings)
 GPIO.cleanup()
