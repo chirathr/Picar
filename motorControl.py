@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-def setUp:
+def setUp():
     GPIO.setmode(GPIO.BOARD)
     # select the pins
     servoPin = 3
@@ -17,6 +17,7 @@ def setUp:
     speed = GPIO.PWM(sp, 50)
     speed.start(30)
     pwm.start(0)
+    stop()
 
 def forward():
     GPIO.output(in1, 1)

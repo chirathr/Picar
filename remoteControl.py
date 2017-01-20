@@ -7,6 +7,8 @@ orig_settings = termios.tcgetattr(sys.stdin)
 
 tty.setraw(sys.stdin)
 
+setUp()
+
 x = 0
 steering = 1
 running = 1
