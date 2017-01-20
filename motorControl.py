@@ -51,9 +51,12 @@ def stop():
 
 def left():
     pwm.ChangeDutyCycle(9) #left
+    print("left")
 
 def right():
-    pwm.ChangeDutyCycle(5)
+    pwm.ChangeDutyCycle(4.5)
+    print("center")
 
 def straight():
     pwm.ChangeDutyCycle(7) #center
+    print("right")
