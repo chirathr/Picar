@@ -14,7 +14,7 @@ GPIO.setup(in1, GPIO.OUT)
 GPIO.setup(in2, GPIO.OUT)
 pwm = GPIO.PWM(servoPin, 50)
 speed = GPIO.PWM(sp, 50)
-speed.start(30)
+speed.start(50)
 pwm.start(0)
 
 
@@ -54,9 +54,9 @@ def left():
     print("left")
 
 def right():
-    pwm.ChangeDutyCycle(4.5)
+    pwm.ChangeDutyCycle(4)
     print("center")
 
 def straight():
-    pwm.ChangeDutyCycle(7) #center
+    pwm.ChangeDutyCycle(7.5) #center
     print("right")

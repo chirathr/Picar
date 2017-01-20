@@ -74,14 +74,14 @@ while x != chr(27): # till ESC is pressed
             right()
             steering = 2
 
-    if x == 'a':
+    if x == 'w':
 	if running == 2:
 	    stop()
 	    running = 1
 	else:
 	    forward()
 	    steering = 0
-   if x == 'd':
+    if x == 's':
 	if running == 0:
 	    stop()
 	    running = 1
