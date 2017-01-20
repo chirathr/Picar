@@ -1,7 +1,6 @@
 import tty
 import sys
 import termios
-from motorControl import *
 
 orig_settings = termios.tcgetattr(sys.stdin)
 
@@ -22,10 +21,11 @@ GPIO.setup(sp, GPIO.OUT)
 GPIO.setup(in1, GPIO.OUT)
 GPIO.setup(in2, GPIO.OUT)
 pwm = GPIO.PWM(servoPin, 50)
-speed = GPIO.PWM(sp, 50)
-speed.start(30)
+speed = GPIO.PWM(sp, 30)
+speed.start(50)
 pwm.start(0)
-
+GPIO.output(in1, 0)
+GPIO.output(in2, 0)
 
 def forward():
     GPIO.output(in1, 1)
@@ -44,7 +44,7 @@ def left():
     print("left")
 
 def right():
-    pwm.ChangeDutyCycle(5)
+    pwm.ChangeDutyCycle(4.5)
     print("center")
 
 def straight():
@@ -80,7 +80,7 @@ while x != chr(27): # till ESC is pressed
 	    running = 1
 	else:
 	    forward()
-	    steering = 0
+	    running = 0
     if x == 's':
 	if running == 0:
 	    stop()

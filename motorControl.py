@@ -32,7 +32,7 @@ def setUp():
     GPIO.setup(in2, GPIO.OUT)
     pwm = GPIO.PWM(servoPin, 50)
     speed = GPIO.PWM(sp, 50)
-    speed.start(30)
+    speed.start(50)
     pwm.start(0)
     GPIO.output(in1, 0)
     GPIO.output(in2, 0)
