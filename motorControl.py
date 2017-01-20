@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 
-
 def setUp:
     GPIO.setmode(GPIO.BOARD)
     # select the pins
@@ -37,5 +36,5 @@ def left():
 def right():
     pwm.ChangeDutyCycle(5)
 
-def center():
+def straight():
     pwm.ChangeDutyCycle(7) #center
