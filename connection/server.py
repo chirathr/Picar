@@ -9,7 +9,6 @@ class Control(object):
     steering = None
     running = None
 
-
     def __init__(self):
         self.x = 0
         self.steering = 1
@@ -59,18 +58,20 @@ class Control(object):
 class SocketServer(object):
     s = None
     c = None
+    host = None
+    port = 0
 
     def __init__(self):
         self.s = socket.socket()         # Create a socket object
-        host = socket.gethostname()      # Get local machine name
-        port = 12347                     # Reserve a port for your service.
-        self.s.bind((host, port))        # Bind to the port
-        self.s.listen(5)                 # Now wait for client connection
+        self.host = socket.gethostname()      # Get local machine name
 
     def close(self):
         c.close()
 
-    def connect(self):
+    def connect(self, port):
+        self.port = port                    # Reserve a port for your service.
+        self.s.bind((self.host, self.port))        # Bind to the port
+        self.s.listen(5)                 # Now wait for client connection
         self.c, addr = self.s.accept()     # Establish connection with client.
         print 'Got connection from', addr
         self.c.send('connection sucessfull')

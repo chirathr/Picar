@@ -2,15 +2,15 @@
 import socket               # Import socket module
 
 class Client(object):
-    self.s = None
-    self.host = None
-    self.port = None
+    s = None
+    host = None
+    port = None
 
     def connect(self, port):
         self.s = socket.socket()         # Create a socket object
         self.host = socket.gethostname() # Get local machine name
         self.port = port                # Reserve a port for your service.
-        self.s.connect((host, port))
+        self.s.connect((self.host, port))
 
         return self.s
 
