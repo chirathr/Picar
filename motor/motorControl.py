@@ -5,12 +5,12 @@ import time
 class Motor(object):
 
     # select the pins
-    servoPin = 3 
-    sp = 11
-    in1 = 5
-    in2 = 7
+    servoPin = 0
+    sp = 0
+    in1 = 0
+    in2 = 0
 
-    def setUp():
+    def __init__():
         GPIO.setmode(GPIO.BOARD)
         # select the pins
         self.servoPin = 3
