@@ -2,7 +2,7 @@ from connection.server import SocketServer
 
 ss = SocketServer()
 
-ss.connect(12345)
+ss.connect(5000)
 
 ss.start_sending()
 
