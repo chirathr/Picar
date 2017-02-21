@@ -25,11 +25,11 @@ class Control(object):
         steering = self.steering
         running = self.running
         print "done"
-        
+
         def keyup(e):
-    	    c.send(e.char + ' ' + 'key up')
+    	    c.send(e.char + '.' + 'key-up')
         def keydown(e):
-     	    c.send(e.char + ' ' + 'key down')
+     	    c.send(e.char + '.' + 'key-down')
 
         root = Tk()
 
@@ -59,7 +59,7 @@ class SocketServer(object):
 
     def connect(self, port):
         self.port = port                    # Reserve a port for your service.
-        self.s.bind((self.host, self.port))        # Bind to the port
+        self.s.bind(('', self.port))        # Bind to the port
         self.s.listen(5)                 # Now wait for client connection
         self.c, addr = self.s.accept()     # Establish connection with client.
         print 'Got connection from', addr
