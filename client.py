@@ -1,9 +1,9 @@
 from connection.client import Client
-#from motor.motorControl import Motor
+from motor.motorControl import Motor
 
 
 client = Client()
-#motor = Motor()
+motor = Motor()
 
 c = client.connect(12345)
 

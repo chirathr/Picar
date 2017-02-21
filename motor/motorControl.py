@@ -52,3 +52,9 @@ class Motor(object):
     def straight(self):
         pwm.ChangeDutyCycle(7.5) #center
         print("right")
+
+    def input(self, x):
+        if x == 'a.key-down':
+            left()
+        if x == 'a.key-up':
+            straight()
