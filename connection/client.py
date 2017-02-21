@@ -1,12 +1,18 @@
 #!/usr/bin/python           # This is client.py file
-
 import socket               # Import socket module
 
-s = socket.socket()         # Create a socket object
-host = socket.gethostname() # Get local machine name
-port = 12347                # Reserve a port for your service.
+class Client(object):
+    self.s = None
+    self.host = None
+    self.port = None
 
-s.connect((host, port))
-while 1:
-    print s.recv(1024)
-s.close
+    def connect(self, port):
+        self.s = socket.socket()         # Create a socket object
+        self.host = socket.gethostname() # Get local machine name
+        self.port = port                # Reserve a port for your service.
+        self.s.connect((host, port))
+
+        return self.s
+
+    def close(self):
+        self.s.close()
