@@ -1,62 +1,54 @@
 import RPi.GPIO as GPIO
 import time
 
-GPIO.setmode(GPIO.BOARD)
-# select the pins
-servoPin = 3
-sp = 11
-in1 = 5
-in2 = 7
-# set pins as outpu
-GPIO.setup(servoPin, GPIO.OUT)
-GPIO.setup(sp, GPIO.OUT)
-GPIO.setup(in1, GPIO.OUT)
-GPIO.setup(in2, GPIO.OUT)
-pwm = GPIO.PWM(servoPin, 50)
-speed = GPIO.PWM(sp, 50)
-speed.start(50)
-pwm.start(0)
 
+class Motor(object):
 
-def setUp():
-    GPIO.setmode(GPIO.BOARD)
     # select the pins
-    servoPin = 3
+    servoPin = 3 
     sp = 11
     in1 = 5
     in2 = 7
-    # set pins as output
-    GPIO.setup(servoPin, GPIO.OUT)
-    GPIO.setup(sp, GPIO.OUT)
-    GPIO.setup(in1, GPIO.OUT)
-    GPIO.setup(in2, GPIO.OUT)
-    pwm = GPIO.PWM(servoPin, 50)
-    speed = GPIO.PWM(sp, 50)
-    speed.start(50)
-    pwm.start(0)
-    GPIO.output(in1, 0)
-    GPIO.output(in2, 0)
 
-def forward():
-    GPIO.output(in1, 1)
-    GPIO.output(in2, 0)
+    def setUp():
+        GPIO.setmode(GPIO.BOARD)
+        # select the pins
+        self.servoPin = 3
+        self.sp = 11
+        self.in1 = 5
+        self.in2 = 7
+        # set pins as output
+        GPIO.setup(self.servoPin, GPIO.OUT)
+        GPIO.setup(self.sp, GPIO.OUT)
+        GPIO.setup(self.in1, GPIO.OUT)
+        GPIO.setup(self.in2, GPIO.OUT)
+        pwm = GPIO.PWM(self.servoPin, 50)
+        speed = GPIO.PWM(self.sp, 50)
+        speed.start(50)
+        pwm.start(0)
+        GPIO.output(self.in1, 0)
+        GPIO.output(self.in2, 0)
 
-def backward():
-    GPIO.output(in1, 0)
-    GPIO.output(in2, 1)
+    def forward(self):
+        GPIO.output(self.in1, 1)
+        GPIO.output(self.in2, 0)
 
-def stop():
-    GPIO.output(in1, 0)
-    GPIO.output(in2, 0)
+    def backward(self):
+        GPIO.output(self.in1, 0)
+        GPIO.output(self.in2, 1)
 
-def left():
-    pwm.ChangeDutyCycle(9) #left
-    print("left")
+    def stop(self):
+        GPIO.output(self.in1, 0)
+        GPIO.output(self.in2, 0)
 
-def right():
-    pwm.ChangeDutyCycle(4)
-    print("center")
+    def left(self):
+        pwm.ChangeDutyCycle(9) #left
+        print("left")
 
-def straight():
-    pwm.ChangeDutyCycle(7.5) #center
-    print("right")
+    def right(self):
+        pwm.ChangeDutyCycle(4)
+        print("center")
+
+    def straight(self):
+        pwm.ChangeDutyCycle(7.5) #center
+        print("right")
