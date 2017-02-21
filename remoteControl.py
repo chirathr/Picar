@@ -86,7 +86,7 @@ while x != chr(27): # till ESC is pressed
 	    stop()
 	    running = 1
 	else:
-            backward()
+        backward()
 	    running = 2
 
 termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_settings)

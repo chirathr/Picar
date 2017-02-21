@@ -9,11 +9,12 @@ class Control(object):
     steering = None
     running = None
 
+
     def __init__(self):
         self.x = 0
         self.steering = 1
         self.running = 1
-        orig_settings = termios.tcgetattr(sys.stdin)
+        self.orig_settings = termios.tcgetattr(sys.stdin)
         tty.setraw(sys.stdin)
 
     def send_key(self, c):
@@ -24,32 +25,32 @@ class Control(object):
             x = sys.stdin.read(1)[0]
             if x == 'a':
                 if steering == 2:
-                    c.sent('W');
+                    c.send('straight');
                     steering = 1
                 else:
-                    c.sent('A')
+                    c.send('A')
                     steering = 0
             if x == 'd':
                 if(steering == 0):
-                    c.send('W')
-                    steering = 10
+                    c.send('straight')
+                    steering = 1
                 else:
                     c.send('D')
                     steering = 2
 
             if x == 'w':
             	if running == 2:
-            	    c.send("STOP")
+            	    c.send("stop")
             	    running = 1
             	else:
             	    c.send("W")
             	    running = 0
             if x == 's':
             	if running == 0:
-            	    c.send("STOP")
+            	    c.send("stop")
             	    running = 1
             	else:
-                    c.send('W')
+                    c.send('S')
             	    running = 2
 
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_settings)
