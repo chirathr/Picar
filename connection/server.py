@@ -3,9 +3,10 @@ import tty
 import sys
 import socket         # Import socket module
 import sys
-import os     
-os.system('xset r off')                     
+import os
 from Tkinter import *
+os.system('xset r off')
+
 
 
 class Control(object):
@@ -17,23 +18,21 @@ class Control(object):
         self.x = 0
         self.steering = 1
         self.running = 1
-        
+
 
     def send_key(self, c):
         x = self.x
         steering = self.steering
         running = self.running
+        print "done"
+        
         def keyup(e):
-            if e == 27:
-                c.close()
-                sys.exit(0)
-	    c.send(e.char + ' ' + 'key up')
+    	    c.send(e.char + ' ' + 'key up')
         def keydown(e):
-            if e == 27:
-                c.close()
-                sys.exit(0)
- 	    c.send(e.char + ' ' + 'key down')
+     	    c.send(e.char + ' ' + 'key down')
+
         root = Tk()
+
         frame = Frame(root, width=100, height=100)
         frame.bind("<KeyPress>", keydown)
         frame.bind("<KeyRelease>", keyup)
@@ -42,7 +41,7 @@ class Control(object):
         root.mainloop()
         c.close()
 
-        
+
 
 
 class SocketServer(object):
@@ -69,5 +68,3 @@ class SocketServer(object):
     def start_sending(self):
         control = Control()
         control.send_key(self.c);
-
-
