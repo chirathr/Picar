@@ -1,8 +1,12 @@
 #!/usr/bin/python                               # This is server.py file
 import tty
 import sys
-import termios
-import socket                                   # Import socket module
+import socket         # Import socket module
+import sys
+import os     
+os.system('xset r off')                     
+from Tkinter import *
+
 
 class Control(object):
     x = None
@@ -13,46 +17,32 @@ class Control(object):
         self.x = 0
         self.steering = 1
         self.running = 1
-        self.orig_settings = termios.tcgetattr(sys.stdin)
-        tty.setraw(sys.stdin)
+        
 
     def send_key(self, c):
         x = self.x
         steering = self.steering
         running = self.running
-        while x != chr(27):                     # till ESC is pressed
-            x = sys.stdin.read(1)[0]
-            if x == 'a':
-                if steering == 2:
-                    c.send('straight');
-                    steering = 1
-                else:
-                    c.send('A')
-                    steering = 0
-            if x == 'd':
-                if(steering == 0):
-                    c.send('straight')
-                    steering = 1
-                else:
-                    c.send('D')
-                    steering = 2
+        def keyup(e):
+            if e == 27:
+                c.close()
+                sys.exit(0)
+	    c.send(e.char + ' ' + 'key up')
+        def keydown(e):
+            if e == 27:
+                c.close()
+                sys.exit(0)
+ 	    c.send(e.char + ' ' + 'key down')
+        root = Tk()
+        frame = Frame(root, width=100, height=100)
+        frame.bind("<KeyPress>", keydown)
+        frame.bind("<KeyRelease>", keyup)
+        frame.pack()
+        frame.focus_set()
+        root.mainloop()
+        c.close()
 
-            if x == 'w':
-            	if running == 2:
-            	    c.send("stop")
-            	    running = 1
-            	else:
-            	    c.send("W")
-            	    running = 0
-            if x == 's':
-            	if running == 0:
-            	    c.send("stop")
-            	    running = 1
-            	else:
-                    c.send('S')
-            	    running = 2
-
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, orig_settings)
+        
 
 
 class SocketServer(object):
@@ -79,3 +69,5 @@ class SocketServer(object):
     def start_sending(self):
         control = Control()
         control.send_key(self.c);
+
+
