@@ -46,7 +46,7 @@ class Motor(object):
         print("left")
 
     def right(self):
-        pwm.ChangeDutyCycle(4)
+        pwm.ChangeDutyCycle(4) # right
         print("center")
 
     def straight(self):
@@ -58,3 +58,15 @@ class Motor(object):
             left()
         if x == 'a.key-up':
             straight()
+        if x == 'w.key-down':
+            forward()
+        if x == 'w.key-up':
+            stop()
+        if x == 'd.key-down':
+            right()
+        if x == 'd.key-up':
+            straight()
+        if x == 's.key-down':
+            backward()
+        if x == 's.key-up':
+            stop()
