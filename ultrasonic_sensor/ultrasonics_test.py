@@ -4,9 +4,11 @@ GPIO.setmode(GPIO.BOARD)                   #Set GPIO pin numbering
 
 
 class Ultrasonic(object):
-    TRIG = 13
-    TRIG2 = 19                                   #Associate pin 23 to TRIG
-    ECHO = 23                                    #Associate pin 24 to ECHO
+    ECHO = 23                                    #Associate pin 23 to ECHO
+    F = 0
+    B = 0
+    L = 0
+    R = 0
 
     def __init__():
         GPIO.setup(self.TRIG,GPIO.OUT)           #Set pin as GPIO out
@@ -39,4 +41,8 @@ class Ultrasonic(object):
             return -1
 
     def dist_all():
-        return str(dist(F, ECHO))
+        return str(
+        dist(self.F) + ',' +
+        dist(self.B) + ' ' +
+        dist(self.L) + ' ' +
+        dist(self.R))
