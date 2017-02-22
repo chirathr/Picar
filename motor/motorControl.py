@@ -10,7 +10,7 @@ class Motor(object):
     in1 = 0
     in2 = 0
 
-    def __init__():
+    def __init__(self):
         GPIO.setmode(GPIO.BOARD)
         # select the pins
         self.servoPin = 3

@@ -8,8 +8,9 @@ motor = Motor()
 c = client.connect(5000)
 
 while 1:
-    print(c.recv(1024))
-    motor.input(c)
+    key = c.recv(1024)
+    print(key)
+    motor.input(key)
 
 
 c.close()
