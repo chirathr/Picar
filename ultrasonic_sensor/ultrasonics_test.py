@@ -5,10 +5,10 @@ GPIO.setmode(GPIO.BOARD)                   #Set GPIO pin numbering
 
 class Ultrasonic(object):
     ECHO = 23                                    #Associate pin 23 to ECHO
-    F = 0
-    B = 0
-    L = 0
-    R = 0
+    F = 13                                       #Front trigger pin
+    B = 19                                       #Back trigger pin
+    L = 21                                       #Left trigger pin
+    R = 15                                       #Right trigger pin
 
     def __init__():
         GPIO.setup(self.TRIG,GPIO.OUT)           #Set pin as GPIO out
@@ -24,10 +24,10 @@ class Ultrasonic(object):
         time.sleep(0.00001)                      #Delay of 0.00001 seconds
         GPIO.output(TRIG, False)                 #Set TRIG as LOW
 
-        while GPIO.input(self.ECHO)==0:               #Check whether the ECHO is LOW
+        while GPIO.input(self.ECHO)==0:          #Check whether the ECHO is LOW
             pulse_start = time.time()            #Saves the last known time of LOW pulse
 
-        while GPIO.input(self.ECHO)==1:               #Check whether the ECHO is HIGH
+        while GPIO.input(self.ECHO)==1:          #Check whether the ECHO is HIGH
             pulse_end = time.time()              #Saves the last known time of HIGH pulse
 
         pulse_duration = pulse_end - pulse_start #Get pulse duration to a variable
@@ -40,9 +40,21 @@ class Ultrasonic(object):
         else:
             return -1
 
-    def dist_all():
+    def dist_all(self):                              # return all sensor data
         return str(
         dist(self.F) + ',' +
-        dist(self.B) + ' ' +
-        dist(self.L) + ' ' +
+        dist(self.B) + ',' +
+        dist(self.L) + ',' +
         dist(self.R))
+
+    def front(self):
+        return dist(self.F)
+
+    def back(self):
+        return dist(self.B)
+
+    def left(self):
+        return dist(self.L)
+
+    def right(self):
+        return dist(self.R)
