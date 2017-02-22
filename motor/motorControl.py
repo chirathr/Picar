@@ -55,18 +55,18 @@ class Motor(object):
 
     def input(self, x):
         if x == 'a.key-down':
-            left()
+            self.left()
         if x == 'a.key-up':
-            straight()
+            self.straight()
         if x == 'w.key-down':
-            forward()
+            self.forward()
         if x == 'w.key-up':
-            stop()
+            self.stop()
         if x == 'd.key-down':
             right()
         if x == 'd.key-up':
-            straight()
+            self.straight()
         if x == 's.key-down':
-            backward()
+            self.backward()
         if x == 's.key-up':
-            stop()
+            self.stop()
