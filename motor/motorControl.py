@@ -22,10 +22,10 @@ class Motor(object):
         GPIO.setup(self.sp, GPIO.OUT)
         GPIO.setup(self.in1, GPIO.OUT)
         GPIO.setup(self.in2, GPIO.OUT)
-        pwm = GPIO.PWM(self.servoPin, 50)
-        speed = GPIO.PWM(self.sp, 50)
-        speed.start(50)
-        pwm.start(0)
+        self.pwm = GPIO.PWM(self.servoPin, 50)
+        self.speed = GPIO.PWM(self.sp, 50)
+        self.speed.start(50)
+        self.pwm.start(0)
         GPIO.output(self.in1, 0)
         GPIO.output(self.in2, 0)
 
@@ -42,15 +42,15 @@ class Motor(object):
         GPIO.output(self.in2, 0)
 
     def left(self):
-        pwm.ChangeDutyCycle(9) #left
+        self.pwm.ChangeDutyCycle(9) #left
         print("left")
 
     def right(self):
-        pwm.ChangeDutyCycle(4) # right
+        self.pwm.ChangeDutyCycle(4) # right
         print("center")
 
     def straight(self):
-        pwm.ChangeDutyCycle(7.5) #center
+        self.pwm.ChangeDutyCycle(7.5) #center
         print("right")
 
     def input(self, x):
@@ -63,7 +63,7 @@ class Motor(object):
         if x == 'w.key-up':
             self.stop()
         if x == 'd.key-down':
-            right()
+            self.right()
         if x == 'd.key-up':
             self.straight()
         if x == 's.key-down':
