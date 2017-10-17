@@ -12,7 +12,7 @@ from motor.motorControl import *
 camera = PiCamera()
 rawCapture = PiRGBArray(camera)
 
-# allow the camera to warmup
+# allow the camera to warm up
 time.sleep(0.1)
 
 cam = cv2.VideoCapture(0)
