@@ -73,7 +73,7 @@ class Motor(object):
         elif inp == 3:
             self.left()
         elif inp == 4:
-            self.center()
+            self.straight()
         elif inp == 5:
             self.right()
         else:
