@@ -4,22 +4,23 @@
 
 # Ultrasonic sensor pins
 
-ECHO_PIN = 23                                         # Associate pin 23 to ECHO
+ECHO_PIN = 29                                         # Associate pin 23 to ECHO
 
-FRONT_TRIGGER = 13                                    # Front trigger pin
-BACK_TRIGGER = 19                                     # Back trigger pin
+FRONT_TRIGGER = 31                                    # Front trigger pin
+BACK_TRIGGER = 35                                     # Back trigger pin
 
 LEFT_TRIGGER = 21                                     # Left trigger pin
-RIGHT_TRIGGER = 15                                    # Right trigger pin
+RIGHT_TRIGGER = 33                                    # Right trigger pin
 
-# Servo control pins
-
-SERVO = 3
 
 # motor control pins
 
-IN1 = 7
+IN1 = 3
 IN2 = 5
-SPEED = 11
+SPEED = 7
+
+# Servo control pins
+
+SERVO = 11
 
 # lights control pins
