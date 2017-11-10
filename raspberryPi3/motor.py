@@ -37,7 +37,7 @@ class Motor(object):
 
         # stop and center the car initially
         self.stop()
-        self.center()
+        self.straight()
 
     def speed(self, value):
         """
@@ -72,15 +72,12 @@ class Motor(object):
 
     def left(self):
         self.manual_direction(0)) #left
-        print("left")
 
     def right(self):
         self.manual_direction(5) # right
-        print("center")
 
     def straight(self):
-        self.manual_direction(3.5) #center
-        print("right")
+        self.manual_direction(3.5) # straight
 
     def input(self, inp):
         if inp == 0:
