@@ -39,6 +39,15 @@ class Motor(object):
         self.stop()
         self.center()
 
+    def speed(self, value):
+        """
+        Speed between 0 and 10
+        """
+        if (value <= 10 or value >= 0)
+            self.speed.start(value * 10)
+        else:
+            print("Speed should be between 0 and 10")
+
     def forward(self):
         GPIO.output(self.in1, 1)
         GPIO.output(self.in2, 0)
@@ -51,16 +60,26 @@ class Motor(object):
         GPIO.output(self.in1, 0)
         GPIO.output(self.in2, 0)
 
+    def manual_direction(self, value):
+        """
+        value in the range(0, 6)
+        """
+        value = 5 - value   # so that left = 0 and right = 5
+        if (value > 5 or value < 0):
+            print("Direction values should be between 0 and 5")
+        else:
+            self.pwm.ChangeDutyCycle(4 + value)
+
     def left(self):
-        self.pwm.ChangeDutyCycle(9) #left
+        self.manual_direction(0)) #left
         print("left")
 
     def right(self):
-        self.pwm.ChangeDutyCycle(4) # right
+        self.manual_direction(5) # right
         print("center")
 
     def straight(self):
-        self.pwm.ChangeDutyCycle(7.5) #center
+        self.manual_direction(3.5) #center
         print("right")
 
     def input(self, inp):
@@ -78,3 +97,6 @@ class Motor(object):
             self.right()
         else:
             print("Wrong input to motor controller, choices are (0-5)")
+
+    def close(self):
+        GPIO.cleanup()
