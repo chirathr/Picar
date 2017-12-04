@@ -40,7 +40,10 @@ GPIO_TRIGGER4 = 37          #Left
 GPIO_ECHO     = 29
 
 # output pin: Trigger
-GPIO.setup(GPIO_TRIGGER,GPIO.OUT)
+GPIO.setup(GPIO_TRIGGER1,GPIO.OUT)
+GPIO.setup(GPIO_TRIGGER2,GPIO.OUT)
+GPIO.setup(GPIO_TRIGGER3,GPIO.OUT)
+GPIO.setup(GPIO_TRIGGER4,GPIO.OUT)
 # input pin: Echo
 GPIO.setup(GPIO_ECHO,GPIO.IN)
 # initialize trigger pin to low
