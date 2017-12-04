@@ -33,10 +33,10 @@ def measure(GPIO_TRIGGER):
 GPIO.setmode(GPIO.BCM)
 
 # define pi GPIO
-GPIO_TRIGGER1 =
-GPIO_TRIGGER2 =
-GPIO_TRIGGER3 =
-GPIO_TRIGGER4 =
+GPIO_TRIGGER1 = 31          #Front
+GPIO_TRIGGER2 = 33          #Right
+GPIO_TRIGGER3 = 35          #Back
+GPIO_TRIGGER4 = 37          #Left
 GPIO_ECHO    =
 
 # output pin: Trigger
