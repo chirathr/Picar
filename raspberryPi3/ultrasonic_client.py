@@ -37,7 +37,7 @@ GPIO_TRIGGER1 = 31          #Front
 GPIO_TRIGGER2 = 33          #Right
 GPIO_TRIGGER3 = 35          #Back
 GPIO_TRIGGER4 = 37          #Left
-GPIO_ECHO    =
+GPIO_ECHO     = 29
 
 # output pin: Trigger
 GPIO.setup(GPIO_TRIGGER,GPIO.OUT)
