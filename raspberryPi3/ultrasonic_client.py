@@ -6,8 +6,8 @@ import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
 
 # create a socket and bind socket to the host
-client_socket = socket(AF_INET, SOCK_STREAM)
-client_socket.connect(('192.168.1.100', 8002))
+#client_socket = socket(AF_INET, SOCK_STREAM)
+#client_socket.connect(('192.168.1.100', 8002))
 
 def measure(GPIO_TRIGGER):
     """
@@ -64,7 +64,7 @@ try:
         time.sleep(0.1)
         print "Distance : %.1f cm" % distance
         # send data to the host every 0.5 sec
-        client_socket.send(str(distance1+","+distance2+","+distance3+","+distance4))
+        #client_socket.send(str(distance1+","+distance2+","+distance3+","+distance4))
         time.sleep(0.5)
 finally:
     client_socket.close()
