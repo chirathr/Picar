@@ -9,7 +9,7 @@ ECHO_PIN = 29                                         # Associate pin 23 to ECHO
 FRONT_TRIGGER = 31                                    # Front trigger pin
 BACK_TRIGGER = 35                                     # Back trigger pin
 
-LEFT_TRIGGER = 21                                     # Left trigger pin
+LEFT_TRIGGER = 37                                   # Left trigger pin
 RIGHT_TRIGGER = 33                                    # Right trigger pin
 
 
