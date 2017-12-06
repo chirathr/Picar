@@ -95,5 +95,20 @@ class Motor(object):
         else:
             print("Wrong input to motor controller, choices are (0-5)")
 
+    def drive(self, direction):
+        if (direction[0] == 0 && direction[1] == 0):
+            self.straight()
+        if (direction[2] == 0 && direction[3] == 0):
+            self.stop()
+
+        if (direction[0] == 1):
+            self.left()
+        if (direction[1] == 1):
+            self.right()
+        if (direction[2] == 1):
+            self.forward()
+        if (direction[3] == 1):
+            self.backward()
+
     def close(self):
         GPIO.cleanup()

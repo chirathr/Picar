@@ -1,6 +1,7 @@
 import socket
 import time
 import sys
+# import motor
 
 
 class MotorController(object):
@@ -9,7 +10,7 @@ class MotorController(object):
         self.port = port
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #self.motor = Motor()
-        
+
     def connect(self):
         print("Connectin to server at ", self.ip, " ", self.port)
         self.client_socket.connect((self.ip, self.port))
@@ -24,6 +25,8 @@ class MotorController(object):
                 print(direction)
 
                 # code to run motor
+                
+                motor.drive(direction)
 
                 if data.strip() == "dack":
                     self.close()
