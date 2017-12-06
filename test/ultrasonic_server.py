@@ -2,7 +2,7 @@ import socket
 import time
 
 class Sensor(object):
-    def __init__(self):
+    def __init__(self, host='localhost', port=8000):
         self.server_socket = socket.socket()
         self.server_socket.bind(('192.168.1.100', 8002))
         self.server_socket.Listen(0)

@@ -3,7 +3,7 @@ import time
 import gpioPinSettings
 
 
-class Sensor(object):
+class Ultrasonic(object):
     def __init__(self):
         print("setting up pins")
         GPIO.setmode(GPIO.BOARD)

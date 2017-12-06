@@ -5,15 +5,14 @@ import sys
 
 
 class MotorController(object):
-    def __init__(self, ip="localhost", port=8002):
-        self.ip = ip
-        self.port = port
+    def __init__(self, host='localhost', port=8000):
+        self.address = (host, port)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #self.motor = Motor()
 
     def connect(self):
         print("Connectin to server at ", self.ip, " ", self.port)
-        self.client_socket.connect((self.ip, self.port))
+        self.client_socket.connect(self.address)
 
     def start(self):
         data = self.client_socket.recv(2048)
@@ -25,7 +24,7 @@ class MotorController(object):
                 print(direction)
 
                 # code to run motor
-                
+
                 motor.drive(direction)
 
                 if data.strip() == "dack":
