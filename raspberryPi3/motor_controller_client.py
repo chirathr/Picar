@@ -3,7 +3,7 @@ import time
 import sys
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(("localhost", 8223))
+client_socket.connect(("localhost", 8002))
 
 data = client_socket.recv(2048)
 
@@ -12,7 +12,7 @@ if data.strip() == "start":
         data = client_socket.recv(2048)
         direction = data.split(", ")
         print(direction)
-        
+
         if data.strip() == "dack":
             client_socket.close()
             sys.exit()
