@@ -40,13 +40,13 @@ class Ultrasonic(object):
         return distance
 
     def distance(self):
-        front = measure(FRONT_TRIGGER, ECHO_PIN)
+        front = self.measure(FRONT_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
-        right = measure(RIGHT_TRIGGER, ECHO_PIN)
+        right = self.measure(RIGHT_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
-        right = measure(BACK_TRIGGER, ECHO_PIN)
+        right = self.measure(BACK_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
-        right = measure(LEFT_TRIGGER, ECHO_PIN)
+        right = self.measure(LEFT_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
         print([distance1, distance2, distance3, distance4])
         return [distance1, distance2, distance3, distance4]
