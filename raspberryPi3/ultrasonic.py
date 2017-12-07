@@ -48,8 +48,8 @@ class Ultrasonic(object):
         time.sleep(0.025)
         right = self.measure(LEFT_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
-        print([distance1, distance2, distance3, distance4])
-        return [distance1, distance2, distance3, distance4]
+        print([front, right, back, left])
+        return [front, right, back, left]
 
     def close(self):
         GPIO.setup(ECHO_PIN,GPIO.IN)
