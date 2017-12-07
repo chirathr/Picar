@@ -51,9 +51,9 @@ class Ultrasonic(object):
         print([distance1, distance2, distance3, distance4])
         return [distance1, distance2, distance3, distance4]
 
-    def exit(self):
+    def close(self):
         GPIO.setup(ECHO_PIN,GPIO.IN)
         GPIO.cleanup()
 
-var = Sensor()
+var = Ultrasonic()
 print var.distance()

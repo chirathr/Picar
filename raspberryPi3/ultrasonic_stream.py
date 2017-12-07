@@ -25,4 +25,9 @@ class UltrasonicStream(object):
 
     def close(self):
         self.client_socket.close()
+		self.ultrasonic.close()
         sys.exit()
+
+uS = UltrasonicStream('192.168.43.50', 8001)
+us.connect()
+us.start()
