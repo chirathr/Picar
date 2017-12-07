@@ -44,9 +44,9 @@ class Ultrasonic(object):
         time.sleep(0.025)
         right = self.measure(RIGHT_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
-        right = self.measure(BACK_TRIGGER, ECHO_PIN)
+        back = self.measure(BACK_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
-        right = self.measure(LEFT_TRIGGER, ECHO_PIN)
+        left = self.measure(LEFT_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
         print([front, right, back, left])
         return [front, right, back, left]
