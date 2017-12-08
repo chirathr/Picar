@@ -1,10 +1,3 @@
-"""
-Reference:
-PiCamera documentation
-https://picamera.readthedocs.org/en/release-1.10/recipes2.html
-
-"""
-
 import io
 import socket
 import struct
@@ -13,46 +6,85 @@ import picamera
 
 
 class VideoStream(object):
-    """
-    Connect to server and stream camera feed
-    """
-    def __init__(self, ip_address, port_number):
-        """create socket and bind host"""
-        self.connect()
+    def __init__(self, host="localhost", port=8001):
+		self.address = (host, port)
+		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.encode_param=[int(cv2.IMWRITE_JPEG_QUALITY), 90]
 
-    def connect(self, ip_address, port_number):
-        """
-        Connect to the given ip address and port number
-        """
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.connect((ip_address, port_number))
-        self.connection = self.client_socket.makefile('wb')
+    def connect(self):
+		print("Connectin to server at ", self.address[0], " ", self.address[1])
+        self.client_socket.connect(self.address)
 
-    def stream_camera_feed(self):
-        try:
-            with picamera.PiCamera() as camera:
-                camera.resolution = (320, 240)      # pi camera resolution
-                camera.framerate = 10               # 10 frames/sec
-                time.sleep(2)                       # give 2 secs for camera to initilize
-                start = time.time()
-                stream = io.BytesIO()
+    def start(self):
+        while True:
+            start_time = time.time()
 
-                # send jpeg format video stream
-                for foo in camera.capture_continuous(stream, 'jpeg',
-                                                     use_video_port = True):
-                    connection.write(struct.pack('<L', stream.tell()))
-                    connection.flush()
-                    stream.seek(0)
-                    connection.write(stream.read())
-                    if time.time() - start > 600:
-                        break
-                    stream.seek(0)
-                    stream.truncate()
-            connection.write(struct.pack('<L', 0))
-        finally:
-            connection.close()
-            client_socket.close()
+            # read the image to be sent through the network
+            img = cv2.imread('img_fjords.jpg', 0)
+
+            # encoding parameters
+            encode_param=[int(cv2.IMWRITE_JPEG_QUALITY), 90]
+
+            # encoded value saved in imgEncode
+            result, imgEncode = cv2.imencode('.jpg', img, encode_param)
+
+            # convert to numpy array
+            image_array = numpy.array(imgEncode)
+
+            # convert numpy array to string
+            string_data = image_array.tostring()
+
+            # sent the lenght of the image string
+            print("Lenght of data = ", len(string_data))
+            self.client_socket.send( str(len(string_data)).ljust(16));
+
+            # sent the data to the server
+            self.client_socket.send( string_data )
+            print("Data sent")
+
+            self.client_socket.flush()
+
+            if time.time() - start_time > 600:
+                break
+
+        self.close()
+
+
+
+    # def start(self):
+    #     try:
+    #         with picamera.PiCamera() as camera:
+    #             camera.resolution = (320, 240)      # pi camera resolution
+    #             camera.framerate = 10               # 10 frames/sec
+    #             time.sleep(2)                       # give 2 secs for camera to initilize
+    #             start_time = time.time()
+    #             stream = io.BytesIO()
+    #
+    #             # send jpeg format video stream
+    #             for foo in camera.capture_continuous(stream, 'jpeg',
+    #                                                  use_video_port = True):
+    #                 # encoded value saved in imgEncode
+    #                 result, imgEncode = cv2.imencode('.jpg', img, self.encode_param)
+    #
+    #                 # convert to numpy array
+    #                 image_array = numpy.array(imgEncode)
+    #
+    #                 # convert numpy array to string
+    #                 string_data = image_array.tostring()
+    #
+    #                 # sent the lenght of the image string
+    #                 self.client_socket.send(str(len(string_data)).ljust(16));
+    #
+    #                 # sent the data to the server
+    #                 self.client_socket.send(string_data)
+    #
+    #                 self.client_socket.flush()
+    #
+    #                 if time.time() - start_time > 600:
+    #                     break
+    #     finally:
+    #         self.close()
 
     def close(self):
-        connection.close()
-        client_socket.close()
+        self.client_socket.close()
+        sys.exit()
