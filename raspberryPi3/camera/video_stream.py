@@ -2,25 +2,28 @@ import io
 import socket
 import struct
 import time
-import picamera
-
+import cv2
+import numpy
+# import picamera
 
 class VideoStream(object):
     def __init__(self, host="localhost", port=8001):
-		self.address = (host, port)
-		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    	self.address = (host, port)
+    	self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.encode_param=[int(cv2.IMWRITE_JPEG_QUALITY), 90]
 
     def connect(self):
-		print("Connectin to server at ", self.address[0], " ", self.address[1])
+    	print("Connectin to server at ", self.address[0], " ", self.address[1])
         self.client_socket.connect(self.address)
 
     def start(self):
+        start_time = time.time()
         while True:
-            start_time = time.time()
-
+            data = self.client_socket.recv(4)
+            if  data != "next":
+                continue
             # read the image to be sent through the network
-            img = cv2.imread('img_fjords.jpg', 0)
+            img = cv2.imread('../../test/send-recv-img/img_fjords.jpg', 0)
 
             # encoding parameters
             encode_param=[int(cv2.IMWRITE_JPEG_QUALITY), 90]
@@ -42,9 +45,7 @@ class VideoStream(object):
             self.client_socket.send( string_data )
             print("Data sent")
 
-            self.client_socket.flush()
-
-            if time.time() - start_time > 600:
+            if time.time() - start_time > 10:
                 break
 
         self.close()
@@ -88,3 +89,8 @@ class VideoStream(object):
     def close(self):
         self.client_socket.close()
         sys.exit()
+
+
+vS = VideoStream('localhost', 8000)
+vS.connect()
+vS.start()
