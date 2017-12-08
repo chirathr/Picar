@@ -11,7 +11,7 @@ class MotorController(object):
         #self.motor = Motor()
 
     def connect(self):
-        print("Connectin to server at ", self.ip, " ", self.port)
+        print("Connectin to server at ", self.address[0], " ", self.address[1])
         self.client_socket.connect(self.address)
 
     def start(self):
