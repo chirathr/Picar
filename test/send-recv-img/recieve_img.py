@@ -10,6 +10,7 @@ address = (host, port)
 # create a server that listens for a single client
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind(address)
+print("Server started, waiting for client")
 server_socket.listen(5)
 conn, client_address = server_socket.accept()
 
@@ -25,9 +26,11 @@ def recvall(sock, count):
 
 # get the length of the data being sent
 length = recvall(conn, 16)
+print("Lenght of data = ", length)
 
 # Read data till length
 stringData = recvall(conn, int(length))
+print("Data recieved")
 
 # convert to numpy array from string
 data = numpy.fromstring(stringData, dtype='uint8')
@@ -37,6 +40,7 @@ conn.close()
 server_socket.close()
 
 # display the recieved image
+print("Image displayed, press any key to exit.")
 decimg=cv2.imdecode(data,1)
 cv2.imshow('SERVER', decimg)
 
