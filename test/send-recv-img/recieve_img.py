@@ -1,7 +1,6 @@
 import socket
 import cv2
 import numpy
-import time
 
 # host and port
 host='localhost'
@@ -24,30 +23,26 @@ def recvall(sock, count):
         buf += newbuf
         count -= len(newbuf)
     return buf
-start_time = time.time()
-while True:
-    # get the length of the data being sent
-    conn.send("next")
-    length = recvall(conn, 16)
-    print("Lenght of data = ", length)
 
-    # Read data till length
-    stringData = recvall(conn, int(length))
-    print("Data recieved")
+# get the length of the data being sent
+length = recvall(conn, 16)
+print("Lenght of data = ", length)
 
-    # convert to numpy array from string
-    data = numpy.fromstring(stringData, dtype='uint8')
+# Read data till length
+stringData = recvall(conn, int(length))
+print("Data recieved")
 
-    # display the recieved image
-    print("Image displayed, press any key to exit.")
-    decimg=cv2.imdecode(data,1)
-    cv2.imshow('SERVER', decimg)
+# convert to numpy array from string
+data = numpy.fromstring(stringData, dtype='uint8')
 
-    if time.time() - start_time > 10:
-        # close connection
-        conn.close()
-        server_socket.close()
-        break
+# close connection
+conn.close()
+server_socket.close()
+
+# display the recieved image
+print("Image displayed, press any key to exit.")
+decimg=cv2.imdecode(data,1)
+cv2.imshow('SERVER', decimg)
 
 # wait for a key and exit
 cv2.waitKey(0)
