@@ -33,6 +33,9 @@ class CollectTrainingData(object):
         saved_frame = 0
         total_frame = 0
 
+        pygame.init()
+        pygame.display.set_mode([300,300])
+
         # collect images for training
         print 'Start collecting images...'
 
@@ -120,10 +123,10 @@ class CollectTrainingData(object):
             self.conn.send(str(self.direction).strip("[").strip("]"))
 
             image_array = numpy.vstack((image_array, temp_array))
-            label_array = numpy.vstack((label_array, direction))
+            label_array = numpy.vstack((label_array, self.direction))
             saved_frame += 1
 
-            print direction
+            print self.direction
 
             self.conn.send("next")
 
@@ -132,7 +135,7 @@ class CollectTrainingData(object):
         train_labels = label_array[1:, :]
 
         # save training data as a numpy file
-        numpy.savez('training_data_temp/data000.npz', train=train, train_labels=train_labels)
+        numpy.savez('../training_data/data000.npz', train=train, train_labels=train_labels)
 
         e2 = cv2.getTickCount()
         # calculate streaming duration
@@ -146,11 +149,11 @@ class CollectTrainingData(object):
         print 'Dropped frame', total_frame - saved_frame
 
 
-    def close():
+    def close(self):
         # close connection
         self.conn.send("stop")
-        conn.close()
-        server_socket.close()
+        self.conn.close()
+        self.server_socket.close()
 
         # wait for a key and exit
         cv2.waitKey(0)
