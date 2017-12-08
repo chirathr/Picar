@@ -4,7 +4,7 @@ import numpy
 
 # server address and port
 host='localhost'
-port=8000
+port=8001
 address = (host, port)
 
 # create a client that connects to the server
@@ -13,6 +13,8 @@ client_socket.connect(address)
 
 # read the image to be sent through the network
 img = cv2.imread('img_fjords.jpg', 0)
+
+img = img[:240, :320]
 
 # encoding parameters
 encode_param=[int(cv2.IMWRITE_JPEG_QUALITY), 90]

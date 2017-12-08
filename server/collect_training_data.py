@@ -8,7 +8,7 @@ class CollectTrainingData(object):
 
     def __init__(self, host='localhost', port=8001):
         self.address = (host, port)
-		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.direction = [0, 0, 0, 0]
 
     def connect(self):
@@ -19,7 +19,7 @@ class CollectTrainingData(object):
         print "Connected to client at ", self.client_address
         self.conn.send("start")
 
-    def recvImage(sock, length):
+    def recvall(self, sock, length):
         buf = b''
         while length:
             newbuf = sock.recv(length)
@@ -39,16 +39,16 @@ class CollectTrainingData(object):
         e1 = cv2.getTickCount()
 
         # 320 * 120
-        image_array = np.zeros((1, 38400))
+        image_array = numpy.zeros((1, 38400))
 
         # [front, right, reverse, left]
-        label_array = np.zeros((1, 4), 'float')
+        label_array = numpy.zeros((1, 4), 'float')
 
         # create labels
-        self.k = np.zeros((4, 4), 'float')
+        self.k = numpy.zeros((4, 4), 'float')
         for i in range(4):
             self.k[i, i] = 1
-        self.temp_label = np.zeros((1, 4), 'float')
+        self.temp_label = numpy.zeros((1, 4), 'float')
 
         frame = 1
 
@@ -56,27 +56,32 @@ class CollectTrainingData(object):
 
         while True:
             # get the length of the data being sent
-            length = recvall(self.conn, 16)
+            length = self.recvall(self.conn, 16)
             print("Lenght of data = ", length)
 
             # Read data till length
-            stringData = recvall(conn, int(length))
+            stringData = self.recvall(self.conn, int(length))
             print("Data recieved")
 
             # convert to numpy array from string
-            data = numpy.fromstring(stringData, dtype='uint8')
+            data = numpy.fromstring(stringData, dtype=numpy.uint8)
 
             # display the recieved image
-            decimg=cv2.imdecode(data, 1)
-            cv2.imshow('SERVER', decimg)
+            decimg=cv2.imdecode(data, 0)
 
             # save streamed images
-            cv2.imwrite('training_images/frame{:>05}.jpg'.format(frame), decimg)
+            cv2.imwrite('../training_images/frame{:>05}.jpg'.format(frame), decimg)
+
+            #cv2.imshow('roi_image', roi)
+            cv2.imshow('image', decimg)
 
             # select lower half of the image
-            roi = image[120:240, :]
+            roi = decimg[120:240, :]
+
+            print roi.shape
+
             # reshape the roi image into one row array
-            temp_array = roi.reshape(1, 38400).astype(np.float32)
+            temp_array = roi.reshape(1, 38400).astype(numpy.float32)
 
             frame += 1
             total_frame += 1
@@ -127,7 +132,7 @@ class CollectTrainingData(object):
         train_labels = label_array[1:, :]
 
         # save training data as a numpy file
-        np.savez('training_data_temp/data000.npz', train=train, train_labels=train_labels)
+        numpy.savez('training_data_temp/data000.npz', train=train, train_labels=train_labels)
 
         e2 = cv2.getTickCount()
         # calculate streaming duration
@@ -150,3 +155,8 @@ class CollectTrainingData(object):
         # wait for a key and exit
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+
+ctd = CollectTrainingData()
+ctd.connect()
+ctd.start()
