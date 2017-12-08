@@ -1,7 +1,7 @@
 # import ultrasonic
 import socket
 
-class UltrasonicStream(object):
+class UltrasonicStreamClient(object):
 	def __init__(self, host="localhost", port=8001):
 		self.address = (host, port)
 		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,6 +28,6 @@ class UltrasonicStream(object):
 		self.ultrasonic.close()
         sys.exit()
 
-uS = UltrasonicStream('192.168.43.50', 8001)
+uS = UltrasonicStreamClient('192.168.43.50', 8001)
 us.connect()
 us.start()
