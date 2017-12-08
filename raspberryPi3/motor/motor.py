@@ -43,7 +43,7 @@ class Motor(object):
         """
         Speed between 0 and 10
         """
-        if (value <= 10 or value >= 0)
+        if (value <= 10 or value >= 0):
             self.speed.start(value * 10)
         else:
             print("Speed should be between 0 and 10")
@@ -71,7 +71,7 @@ class Motor(object):
             self.pwm.ChangeDutyCycle(4 + value)
 
     def left(self):
-        self.manual_direction(0)) #left
+        self.manual_direction(0) #left
 
     def right(self):
         self.manual_direction(5) # right
@@ -96,9 +96,9 @@ class Motor(object):
             print("Wrong input to motor controller, choices are (0-5)")
 
     def drive(self, direction):
-        if (direction[0] == 0 && direction[1] == 0):
+        if (direction[0] == 0 and direction[1] == 0):
             self.straight()
-        if (direction[2] == 0 && direction[3] == 0):
+        if (direction[2] == 0 and direction[3] == 0):
             self.stop()
 
         if (direction[0] == 1):
