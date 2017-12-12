@@ -66,7 +66,6 @@ class CollectTrainingData(object):
         label_array = numpy.zeros((1, 4), 'float')
 
         frame = 1
-
         self.conn.send("start")
 
         temp = self.direction[:]
