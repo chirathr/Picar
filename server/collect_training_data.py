@@ -45,11 +45,15 @@ class CollectTrainingData(object):
         # decode the recieved image
         decimg = cv2.imdecode(data, 0)
 
+        print decimg.shape
+
         # save streamed images
         cv2.imwrite('../training_images/frame{:>05}.jpg'.format(frame), decimg)
 
         #cv2.imshow('roi_image', roi)
+
         cv2.imshow('image', decimg)
+        cv2.waitKey(25)
 
 
     def start(self):
@@ -63,7 +67,7 @@ class CollectTrainingData(object):
         e1 = cv2.getTickCount()
 
         # [front, right, reverse, left]
-        label_array = numpy.zeros((1, 4), 'float')
+        label_array = numpy.zeros((1, 4), 'int')
 
         frame = 1
         self.conn.send("start")
@@ -118,7 +122,7 @@ class CollectTrainingData(object):
 
                     frame += 1
 
-                    #image_array = numpy.vstack((image_array, temp_array))
+                   # image_array = numpy.vstack((image_array, temp_array))
                     label_array = numpy.vstack((label_array, self.direction))
 
                     temp = self.direction[:]
@@ -145,12 +149,13 @@ class CollectTrainingData(object):
     def close(self):
         # close connection
         self.conn.send("stop")
+        self.conn.close()
 
         # wait for a key and exit
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
 
-ctd = CollectTrainingData()
+ctd = CollectTrainingData('0.0.0.0', 8001)
 ctd.connect()
 ctd.start()
