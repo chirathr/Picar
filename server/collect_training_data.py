@@ -9,7 +9,8 @@ class CollectTrainingData(object):
     def __init__(self, host='localhost', port=8001):
         self.address = (host, port)
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.direction = [0, 0, 0, 0]
+        self.direction = numpy.zeros((1, 4), dtype = numpy.float32)
+        print self.direction
 
     def connect(self):
         self.server_socket.bind(self.address)
@@ -52,8 +53,8 @@ class CollectTrainingData(object):
 
         #cv2.imshow('roi_image', roi)
 
-        cv2.imshow('image', decimg)
-        cv2.waitKey(25)
+        #cv2.imshow('image', decimg)
+        #cv2.waitKey(25)
 
 
     def start(self):
@@ -67,10 +68,12 @@ class CollectTrainingData(object):
         e1 = cv2.getTickCount()
 
         # [front, right, reverse, left]
-        label_array = numpy.zeros((1, 4), 'int')
+        label_array = numpy.zeros((1, 4), dtype = numpy.float32)
 
         frame = 1
         self.conn.send("start")
+
+        temp = numpy.zeros((1, 4), dtype = numpy.float32)
 
         temp = self.direction[:]
 
@@ -95,37 +98,37 @@ class CollectTrainingData(object):
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
-                        self.direction[0] = 1
+                        self.direction[0][0] = 1
                     if event.key == pygame.K_RIGHT:
-                        self.direction[1] = 1
+                        self.direction[0][1] = 1
                     if event.key == pygame.K_UP:
-                        self.direction[2] = 1
+                        self.direction[0][2] = 1
                     if event.key == pygame.K_DOWN:
-                        self.direction[3] = 1
+                        self.direction[0][3] = 1
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
-                        self.direction[0] = 0
+                        self.direction[0][0] = 0
                     if event.key == pygame.K_RIGHT:
-                        self.direction[1] = 0
+                        self.direction[0][1] = 0
                     if event.key == pygame.K_UP:
-                        self.direction[2] = 0
+                        self.direction[0][2] = 0
                     if event.key == pygame.K_DOWN:
-                        self.direction[3] = 0
+                        self.direction[0][3] = 0
 
-                if(temp != self.direction):
-                    self.conn.send(str(self.direction).strip("[").strip("]"))
-                    print (self.direction)
-                    self.conn.send("next")
 
-                    self.get_frame(frame)
+                self.conn.send(str(self.direction).strip("[").strip("]"))
+                print (self.direction)
+                self.conn.send("next")
 
-                    frame += 1
+                self.get_frame(frame)
 
-                   # image_array = numpy.vstack((image_array, temp_array))
-                    label_array = numpy.vstack((label_array, self.direction))
+                frame += 1
 
-                    temp = self.direction[:]
+               # image_array = numpy.vstack((image_array, temp_array))
+                label_array = numpy.vstack((label_array, self.direction))
+
+                temp = self.direction[:]
 
         # save training labels
         train_labels = label_array[1:, :]
