@@ -55,8 +55,6 @@ class KeyInputThread(Thread):
                     if event.key == pygame.K_DOWN:
                         direction[0][3] = 0
 
-                print direction[0]
-
         control_thread = False
 
 
@@ -66,10 +64,8 @@ class CollectTrainingData(Thread):
         super(CollectTrainingData, self).__init__()
         self.address = (host, port)
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.direction = numpy.zeros((1, 4), dtype=numpy.float32)
         self.conn = None
         self.client_address = None
-        print self.direction
 
     def connect(self):
         self.server_socket.bind(self.address)
@@ -131,12 +127,12 @@ class CollectTrainingData(Thread):
 
             self.get_frame(frame)
 
-            self.conn.send(str(self.direction[0]).strip("[").strip("]"))
-            print (self.direction[0])
+            self.conn.send(str(direction[0]).strip("[").strip("]"))
+            print (direction[0])
 
             frame += 1
 
-            label_array = numpy.vstack((label_array, self.direction[0]))
+            label_array = numpy.vstack((label_array, direction[0]))
 
         # save training labels
         train_labels = label_array[1:, :]
