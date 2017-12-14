@@ -33,13 +33,17 @@ while True:
 
     # sent the lenght of the image string
     print("Lenght of data = ", len(string_data))
-    client_socket.send( str(len(string_data)).ljust(16));
+    client_socket.send(str(len(string_data)).ljust(16))
 
     # sent the data to the server
-    client_socket.send( string_data )
+    client_socket.send(string_data)
     print("Data sent")
 
-    if client_socket.recv(100).strip() == "stop":
+    data = client_socket.recv(100).strip()
+
+    print data
+
+    if data == "stop":
         break
 
 # close the socket connection
