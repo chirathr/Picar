@@ -8,35 +8,58 @@ class MLModel(object):
         self.image_array = np.zeros((1, 38400))
         self.label_array = np.zeros((1, 4), dtype = np.float32)
 
-
     def load_training_data(self, image_path, label_path):
+        """
+            This function takes all the images from the image path and converts
+            to an numpy float32 array. It also loads the saved label data.
+        """
+        # start timer
         t0 = cv2.getTickCount()
-        images = glob.glob(image_path)
-        label_data = np.load(label_path)['train_labels']
-        image_data = np.zeros((1, 38400), dtype = np.float32)
 
+        # get all the jpeg images in the path
+        images = glob.glob(image_path + '*.jpg')
+
+        # load all the label data
+        self.label_array = np.load(label_path)['train_labels']
+
+
+        # convert all images to numpy float32 array and stack them
         for image in images:
+            # read an image
             img = cv2.imread(image, 0)
-            roi = img[120:240, :]
-            temp_array = roi.reshape(1, 38400).astype(np.float32)
-            image_data = np.vstack((image_data, temp_array))
 
-        self.image_array = image_data[1:30]
-        self.label_array = label_data[1:30]
+            # get the lower half of the image
+            roi = img[120:240, :]
+
+            # convert img to a 1D array
+            temp_array = roi.reshape(1, 38400).astype(np.float32)
+
+            # stack image into rows
+            self.image_data = np.vstack((image_data, temp_array))
+
+        self.image_array = self.image_data[1:30]
+        self.label_array = self.label_array[1:30]
 
         print self.image_array.shape
         print self.label_array.shape
 
+        # end timer
         t1 = cv2.getTickCount()
 
+        # print the time to load the image
         time = (t1 - t0)/ cv2.getTickFrequency()
         print 'Image loaded in :', time
 
     def start(self):
+        """
+            Takes the label_array and image_array trains the ANN_MLP network.
+        """
         t0 = cv2.getTickCount()
 
-        # create MLP
+        # create ANN(Artificial Neural Networks) MLP (multi-layer perceptrons)
         model = cv2.ml.ANN_MLP_create()
+
+        # Train method as 
         model.setTrainMethod(cv2.ml.ANN_MLP_RPROP | cv2.ml.ANN_MLP_UPDATE_WEIGHTS)
         model.setLayerSizes(np.int32([38400, 32, 4]))
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
