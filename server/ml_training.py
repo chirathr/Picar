@@ -4,9 +4,10 @@ import glob
 
 
 class MLModel(object):
-    def __inti__(self):
-        self.image_array = np.zeros((1, 38400))
+    def __init__(self):
+        self.image_array = np.zeros((1, 38400), dtype = np.float32)
         self.label_array = np.zeros((1, 4), dtype = np.float32)
+        self.image_data  = np.zeros((1, 38400), dtype = np.float32)
 
     def load_training_data(self, image_path, label_path):
         """
@@ -17,7 +18,7 @@ class MLModel(object):
         t0 = cv2.getTickCount()
 
         # get all the jpeg images in the path
-        images = glob.glob(image_path + '*.jpg')
+        images = glob.glob(image_path)
 
         # load all the label data
         self.label_array = np.load(label_path)['train_labels']
@@ -35,10 +36,10 @@ class MLModel(object):
             temp_array = roi.reshape(1, 38400).astype(np.float32)
 
             # stack image into rows
-            self.image_data = np.vstack((image_data, temp_array))
+            self.image_data = np.vstack((self.image_data, temp_array))
 
-        self.image_array = self.image_data[1:30]
-        self.label_array = self.label_array[1:30]
+        self.image_array = self.image_data[1:-1]
+        self.label_array = self.label_array[1:]
 
         print self.image_array.shape
         print self.label_array.shape
@@ -59,7 +60,7 @@ class MLModel(object):
         # create ANN(Artificial Neural Networks) MLP (multi-layer perceptrons)
         model = cv2.ml.ANN_MLP_create()
 
-        # Train method as 
+        # Train method as
         model.setTrainMethod(cv2.ml.ANN_MLP_RPROP | cv2.ml.ANN_MLP_UPDATE_WEIGHTS)
         model.setLayerSizes(np.int32([38400, 32, 4]))
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
@@ -77,7 +78,7 @@ class MLModel(object):
         print 'Training complete in :', time
 
         # save param
-        model.save('mlp_xml/mlp.xml')
+        model.save('../mlp_xml/mlp.xml')
 
         print 'Ran for %d iterations' % num_iter
 

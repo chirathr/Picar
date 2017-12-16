@@ -3,27 +3,42 @@ import cv2
 import pygame
 import socket
 from threading import Thread
+import multiprocessing as mp
 
 direction = numpy.zeros([1, 4], dtype=numpy.float32)
 key_thread = True
 control_thread = True
+send_inst = True
 
-
-class KeyInputThread(Thread):
+class KeyInputThread(mp.Process):
+    """
+    The class creates a window to input direction from keyboard. Inputs include left, right, up and down arrow keys.
+    The direction list is a static global variable that can be accessed from another thread. Esc to quit.
+    """
 
     def __init__(self):
+        """
+        Initialise pygame window
+        """
         super(KeyInputThread, self).__init__()
         pygame.init()
+        # pygame windows resolution 300x300
         pygame.display.set_mode([300, 300])
 
     def run(self):
+        """
+        collects the current keyboard input and stored in global variable direction
+        :return:
+        """
         global direction
         global key_thread
         global control_thread
+        global send_inst
 
         while key_thread:
 
             for event in pygame.event.get():
+                # quit when close button or esc key is pressed.
                 if event.type == pygame.QUIT:
                     print("stop")
                     key_thread = False
@@ -35,30 +50,34 @@ class KeyInputThread(Thread):
                         key_thread = False
                         break
 
+                # set direction = 1 on key press [up, left, down, right]
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        direction[0][0] = 1
-                    if event.key == pygame.K_RIGHT:
-                        direction[0][1] = 1
                     if event.key == pygame.K_UP:
-                        direction[0][2] = 1
+                        direction[0][0] = 1
+                    if event.key == pygame.K_LEFT:
+                        direction[0][1] = 1
                     if event.key == pygame.K_DOWN:
+                        direction[0][2] = 1
+                    if event.key == pygame.K_RIGHT:
                         direction[0][3] = 1
 
+                # set direction = 0 on key up
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT:
-                        direction[0][0] = 0
-                    if event.key == pygame.K_RIGHT:
-                        direction[0][1] = 0
                     if event.key == pygame.K_UP:
-                        direction[0][2] = 0
+                        direction[0][0] = 0
+                    if event.key == pygame.K_LEFT:
+                        direction[0][1] = 0
                     if event.key == pygame.K_DOWN:
+                        direction[0][2] = 0
+                    if event.key == pygame.K_RIGHT:
                         direction[0][3] = 0
 
+        # exit the collect training data thread3
         control_thread = False
+        send_inst = False
 
 
-class CollectTrainingData(Thread):
+class CollectTrainingData(mp.Process):
 
     def __init__(self, host='localhost', port=8001):
         super(CollectTrainingData, self).__init__()
@@ -66,49 +85,18 @@ class CollectTrainingData(Thread):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.conn = None
         self.client_address = None
+        self.send_inst = True
 
     def connect(self):
         self.server_socket.bind(self.address)
         self.server_socket.listen(5)
         print ("Listening for client . . .")
-        self.conn, self.client_address = self.server_socket.accept()
-        print ("Connected to client at ", self.client_address)
-        self.conn.send("start")
-
-    def receive_all(self, length):
-        buf = b''
-        while length:
-            new_buf = self.conn.recv(length)
-            if not new_buf:
-                return None
-            buf += new_buf
-            length -= len(new_buf)
-        return buf
-
-    def get_frame(self, frame):
-
-        # get the length of the data being sent
-        length = self.receive_all(16)
-        #print("Length of data = ", length)
-
-        # Read data till length
-        string_data = self.receive_all(int(length))
-        #print("Data received")
-
-        # convert to numpy array from string
-        data = numpy.fromstring(string_data, dtype=numpy.uint8)
-
-        # decode the recieved image
-        decoded_img = cv2.imdecode(data, 0)
-
-        print decoded_img.shape
-
-        # save streamed images
-        cv2.imwrite('../training_images/frame{:>05}.jpg'.format(frame), decoded_img)
+        self.conn = self.server_socket.accept()[0].makefile('rb')
 
     def run(self):
         global direction
         global control_thread
+        global send_inst
 
         # collect images for training
         print ('Start collecting images...')
@@ -120,55 +108,70 @@ class CollectTrainingData(Thread):
 
         frame = 1
 
-        while control_thread:
-            self.conn.send("start")
+        try:
+            stream_bytes = ' '
+            frame = 1
+            while send_inst:
+                if frame > 700:
+                    break
+                stream_bytes += self.conn.read(1024)
+                first = stream_bytes.find('\xff\xd8')
+                last = stream_bytes.find('\xff\xd9')
+                if first != -1 and last != -1:
+                    jpg = stream_bytes[first:last + 2]
+                    stream_bytes = stream_bytes[last + 2:]
+                    image = cv2.imdecode(numpy.fromstring(jpg, dtype=numpy.uint8), 0)
 
-            self.conn.send("next")
+                    # select lower half of the image
+                    roi = image[120:240, :]
 
-            self.get_frame(frame)
+                    # save streamed images
+                    cv2.imwrite('../training_images/frame{:>05}.jpg'.format(frame), image)
 
-            self.conn.send(str(direction[0]).strip("[").strip("]"))
-            print (direction[0])
+                    print (direction[0])
 
-            frame += 1
+                    frame += 1
 
-            label_array = numpy.vstack((label_array, direction[0]))
+                    label_array = numpy.vstack((label_array, direction[0]))
 
-        # save training labels
-        train_labels = label_array[1:, :]
+                    #cv2.imshow('roi_image', roi)
+                    # cv2.imshow('image', image)
 
-        # save label data as a numpy file
-        print("saving file")
-        numpy.savez('../training_data/data000.npz', train_labels=train_labels)
+            # save training labels
+            train_labels = label_array[1:, :]
 
-        e2 = cv2.getTickCount()
-        # calculate streaming duration
-        time0 = (e2 - e1) / cv2.getTickFrequency()
-        print ('Streaming duration:', time0)
+            # save label data as a numpy file
+            print("saving file")
+            numpy.savez('../training_data/data000.npz', train_labels=train_labels)
 
-        # print(train.shape)
-        print(train_labels.shape)
-        print ('Total frame:', frame)
+            e2 = cv2.getTickCount()
+            # calculate streaming duration
+            time0 = (e2 - e1) / cv2.getTickFrequency()
+            print ('Streaming duration:', time0)
 
-        self.close()
+            # print(train.shape)
+            print(train_labels.shape)
+            print ('fps:', frame/time0)
+
+        finally:
+            self.close()
 
     def close(self):
         # close connection
-        self.conn.send("stop")
-        self.conn.close()
+        # self.conn.close()
 
         # wait for a key and exit
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
 
-ctd = CollectTrainingData('0.0.0.0', 8001)
+ctd = CollectTrainingData('localhost', 8001)
 k = KeyInputThread()
 
 ctd.connect()
 
-k.start()
+# k.start()
 ctd.start()
 
-k.join()
+# k.join()
 ctd.join()
