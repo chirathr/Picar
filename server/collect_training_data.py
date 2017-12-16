@@ -2,14 +2,14 @@ import numpy
 import cv2
 import pygame
 import socket
-import multiprocessing as mp
+from multiprocessing import Process
 
 direction = numpy.zeros([1, 4], dtype=numpy.float32)
 key_thread = True
 control_thread = True
 send_inst = True
 
-class KeyInputThread(mp.Process):
+class KeyInputThread(Process):
     """
     The class creates a window to input direction from keyboard. Inputs include left, right, up and down arrow keys.
     The direction list is a static global variable that can be accessed from another thread. Esc to quit.
@@ -76,7 +76,7 @@ class KeyInputThread(mp.Process):
         send_inst = False
 
 
-class CollectTrainingData(mp.Process):
+class CollectTrainingData(Process):
 
     def __init__(self, host='localhost', port=8001):
         super(CollectTrainingData, self).__init__()
