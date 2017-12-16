@@ -1,20 +1,21 @@
 import socket
 import time
 import sys
-# import motor
+import motor
+from multiprocessing import Process
 
 
-class MotorController(object):
+class MotorController(Process):
     def __init__(self, host='localhost', port=8000):
         self.address = (host, port)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.motor = Motor()
+        self.motor = Motor()
 
     def connect(self):
         print("Connectin to server at ", self.address[0], " ", self.address[1])
         self.client_socket.connect(self.address)
 
-    def start(self):
+    def run(self):
         data = self.client_socket.recv(2048)
 
         if data.strip() == "start":
@@ -36,5 +37,5 @@ class MotorController(object):
 
 
 mC = MotorController("localhost", 8002)
-mC.connect()
-mC.start()
+mC.startt()
+mC.join()

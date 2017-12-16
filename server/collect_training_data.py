@@ -2,7 +2,6 @@ import numpy
 import cv2
 import pygame
 import socket
-from threading import Thread
 import multiprocessing as mp
 
 direction = numpy.zeros([1, 4], dtype=numpy.float32)
@@ -170,8 +169,8 @@ k = KeyInputThread()
 
 ctd.connect()
 
-# k.start()
+k.start()
 ctd.start()
 
-# k.join()
+k.join()
 ctd.join()
