@@ -5,7 +5,7 @@ from motor import Motor
 from multiprocessing import Process
 
 
-class MotorController(object):
+class MotorController(Process):
     def __init__(self, host='localhost', port=8000):
         self.address = (host, port)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,3 +36,10 @@ class MotorController(object):
         self.motor.close()
         self.client_socket.close()
         sys.exit()
+
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print ('Error: usage: filename ip port')
+    motorController = MotorController(sys.argv[1], int(sys.argv[2]))
+    motorController.start()
+    motorController.join()
