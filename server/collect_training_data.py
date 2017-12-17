@@ -111,9 +111,9 @@ class CollectTrainingData(Process):
             stream_bytes = ' '
             frame = 1
             while send_inst:
-                if frame > 700:
-                    break
                 stream_bytes += self.conn.read(1024)
+                if stream_bytes.find('\x00') != -1:
+                    break
                 first = stream_bytes.find('\xff\xd8')
                 last = stream_bytes.find('\xff\xd9')
                 if first != -1 and last != -1:

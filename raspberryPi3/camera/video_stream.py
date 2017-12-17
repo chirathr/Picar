@@ -21,7 +21,7 @@ class VideoStream(Process):
         try:
             with picamera.PiCamera() as camera:
                 camera.resolution = (320, 240)      # pi camera resolution
-                camera.framerate = 10               # 10 frames/sec
+                camera.framerate = 15               # 10 frames/sec
                 time.sleep(2)                       # give 2 secs for camera to initilize
                 start = time.time()
                 stream = io.BytesIO()
@@ -30,6 +30,7 @@ class VideoStream(Process):
                 for foo in camera.capture_continuous(stream, 'jpeg', use_video_port=True):
                     self.connection.write(struct.pack('<L', stream.tell()))
                     self.connection.flush()
+                    print("frame sent")
                     stream.seek(0)
                     self.connection.write(stream.read())
                     if time.time() - start > 60:
