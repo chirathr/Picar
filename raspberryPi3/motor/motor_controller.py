@@ -27,11 +27,12 @@ class MotorController(Process):
 
                 # code to run motor
 
-                motor.drive(direction)
+                self.motor.drive(direction)
 
                 if data.strip() == "stop":
                     self.close()
 
     def close(self):
+        self.motor.close()
         self.client_socket.close()
         sys.exit()
