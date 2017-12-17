@@ -5,7 +5,7 @@ from motor import Motor
 from multiprocessing import Process
 
 
-class MotorController(Process):
+class MotorController(object):
     def __init__(self, host='localhost', port=8000):
         self.address = (host, port)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -5,8 +5,7 @@ from motor.motor_controller import MotorController
 mc = MotorController('192.168.43.49', 8000)
 vs = VideoStream('192.168.43.49', 8001)
 
-mc.start()
-#vs.start()
+mc.run()
+vs.start()
 
-mc.join()
-#vs.join()
+vs.join()
