@@ -7,22 +7,31 @@ from multiprocessing import Process
 
 class CollectTrainingData(Process):
 
-    def __init__(self, host='localhost', port=8001):
+    def __init__(self, host='localhost',motor_port=8000, video_port=8001):
         super(CollectTrainingData, self).__init__()
-        self.address = (host, port)
-        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.conn = None
-        self.client_address = None
+        self.video_address = (host, video_port)
+        self.video_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        self.motor_address = (host, motor_port)
+        self.motor_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         self.send_inst = True
+
+        # pygame
         pygame.init()
         # pygame windows resolution 300x300
         pygame.display.set_mode([300, 300])
 
     def connect(self):
-        self.server_socket.bind(self.address)
-        self.server_socket.listen(5)
-        print ("Listening for client . . .")
-        self.conn = self.server_socket.accept()[0].makefile('rb')
+        self.video_server_socket.bind(self.video_address)
+        self.video_server_socket.listen(5)
+        self.video_connection = self.video_server_socket.accept()[0].makefile('rb')
+        print ("Connected to video client")
+
+        self.motor_server_socket.bind(self.motor_address)
+        self.motor_server_socket.listen(5)
+        self.motor_connection = self.motor_server_socket.accept()
+        print ("Connected to video client")
 
     def getDirection(self):
         pygame.event.pump()
@@ -49,7 +58,7 @@ class CollectTrainingData(Process):
             stream_bytes = ' '
             frame = 1
             while self.send_inst:
-                stream_bytes += self.conn.read(1024)
+                stream_bytes += self.video_connection.read(1024)
                 if stream_bytes.find('end') != -1:
                     self.send_inst = False
                     break
@@ -67,6 +76,8 @@ class CollectTrainingData(Process):
                     cv2.imwrite('../training_images/frame{:>05}.jpg'.format(frame), image)
                     self. getDirection()
                     print (self.direction[0])
+
+                    self.motor_connection.send(str(self.direction[0]).strip("[").strip("]"))
 
                     frame += 1
 
@@ -96,7 +107,7 @@ class CollectTrainingData(Process):
 
     def close(self):
         # close connection
-        # self.conn.close()
+        self.motor_connection.close()
 
         # wait for a key and exit
         cv2.waitKey(0)
