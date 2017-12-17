@@ -38,10 +38,10 @@ class VideoStream(Process):
                         break
                     stream.seek(0)
                     stream.truncate()
-            finally:
-                self.connection.write("end")
-                self.connection.flush()
-                self.close()
+        finally:
+            self.connection.write("end")
+            self.connection.flush()
+            self.close()
 
     def close(self):
         self.client_socket.close()

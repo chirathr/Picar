@@ -166,7 +166,7 @@ class CollectTrainingData(Process):
 
 
 ctd = CollectTrainingData('0.0.0.0', 8001)
-k = KeyInputThread()
+#k = KeyInputThread()
 
 ctd.connect()
 
