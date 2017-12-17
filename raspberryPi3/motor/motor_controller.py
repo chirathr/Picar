@@ -37,9 +37,11 @@ class MotorController(Process):
         self.client_socket.close()
         sys.exit()
 
+
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print ('Error: usage: filename ip port')
+    if len(sys.argv) != 3:
+        print ("Error! usage: %s host-ip port" % __file__)
+        sys.exit()
     motorController = MotorController(sys.argv[1], int(sys.argv[2]))
     motorController.start()
     motorController.join()
