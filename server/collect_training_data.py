@@ -113,6 +113,7 @@ class CollectTrainingData(Process):
             while send_inst:
                 stream_bytes += self.conn.read(1024)
                 if stream_bytes.find('end') != -1:
+                    send_inst = False
                     break
                 first = stream_bytes.find('\xff\xd8')
                 last = stream_bytes.find('\xff\xd9')
@@ -169,8 +170,8 @@ k = KeyInputThread()
 
 ctd.connect()
 
-k.start()
+#k.start()
 ctd.start()
 
-k.join()
+#k.join()
 ctd.join()

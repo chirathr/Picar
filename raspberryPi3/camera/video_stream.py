@@ -1,4 +1,5 @@
 import io
+import sys
 import socket
 import struct
 import time
@@ -21,7 +22,7 @@ class VideoStream(Process):
         try:
             with picamera.PiCamera() as camera:
                 camera.resolution = (320, 240)      # pi camera resolution
-                camera.framerate = 15               # 10 frames/sec
+                camera.framerate = 12               # 10 frames/sec
                 time.sleep(2)                       # give 2 secs for camera to initilize
                 start = time.time()
                 stream = io.BytesIO()
@@ -38,7 +39,7 @@ class VideoStream(Process):
                     stream.seek(0)
                     stream.truncate()
             self.connection.write("end")
-        finally:
+            self.connection.flush()
             self.close()
 
     def close(self):
