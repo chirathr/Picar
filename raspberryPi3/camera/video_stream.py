@@ -37,7 +37,7 @@ class VideoStream(Process):
                         break
                     stream.seek(0)
                     stream.truncate()
-            self.connection.write(struct.pack('<L', 0))
+            self.connection.write("end")
         finally:
             self.close()
 
