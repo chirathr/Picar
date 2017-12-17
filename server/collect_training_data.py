@@ -42,6 +42,7 @@ class CollectTrainingData(Process):
         self.direction[0][3] = keyboard_state[pygame.K_RIGHT]
 
     def run(self):
+        self.motor_connection.send("start")
         self.direction = numpy.zeros([1, 4], dtype=numpy.float32)
 
         # collect images for training
@@ -107,7 +108,9 @@ class CollectTrainingData(Process):
 
     def close(self):
         # close connection
+        self.motor_connection.send("stop")
         self.motor_connection.close()
+
 
         # wait for a key and exit
         cv2.waitKey(0)

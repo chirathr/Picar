@@ -28,7 +28,7 @@ class MotorController(Process):
 
                 motor.drive(direction)
 
-                if data.strip() == "dack":
+                if data.strip() == "stop":
                     self.close()
 
     def close(self):
