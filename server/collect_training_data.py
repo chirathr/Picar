@@ -164,7 +164,7 @@ class CollectTrainingData(Process):
         cv2.destroyAllWindows()
 
 
-ctd = CollectTrainingData('localhost', 8001)
+ctd = CollectTrainingData('0.0.0.0', 8001)
 k = KeyInputThread()
 
 ctd.connect()
