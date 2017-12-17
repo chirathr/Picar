@@ -4,77 +4,6 @@ import pygame
 import socket
 from multiprocessing import Process
 
-direction = numpy.zeros([1, 4], dtype=numpy.float32)
-key_thread = True
-control_thread = True
-send_inst = True
-
-class KeyInputThread(Process):
-    """
-    The class creates a window to input direction from keyboard. Inputs include left, right, up and down arrow keys.
-    The direction list is a static global variable that can be accessed from another thread. Esc to quit.
-    """
-
-    def __init__(self):
-        """
-        Initialise pygame window
-        """
-        super(KeyInputThread, self).__init__()
-        pygame.init()
-        # pygame windows resolution 300x300
-        pygame.display.set_mode([300, 300])
-
-    def run(self):
-        """
-        collects the current keyboard input and stored in global variable direction
-        :return:
-        """
-        global direction
-        global key_thread
-        global control_thread
-        global send_inst
-
-        while key_thread:
-
-            for event in pygame.event.get():
-                # quit when close button or esc key is pressed.
-                if event.type == pygame.QUIT:
-                    print("stop")
-                    key_thread = False
-                    break
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        print("stop")
-                        key_thread = False
-                        break
-
-                # set direction = 1 on key press [up, left, down, right]
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        direction[0][0] = 1
-                    if event.key == pygame.K_LEFT:
-                        direction[0][1] = 1
-                    if event.key == pygame.K_DOWN:
-                        direction[0][2] = 1
-                    if event.key == pygame.K_RIGHT:
-                        direction[0][3] = 1
-
-                # set direction = 0 on key up
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_UP:
-                        direction[0][0] = 0
-                    if event.key == pygame.K_LEFT:
-                        direction[0][1] = 0
-                    if event.key == pygame.K_DOWN:
-                        direction[0][2] = 0
-                    if event.key == pygame.K_RIGHT:
-                        direction[0][3] = 0
-
-        # exit the collect training data thread3
-        control_thread = False
-        send_inst = False
-
 
 class CollectTrainingData(Process):
 
@@ -85,6 +14,9 @@ class CollectTrainingData(Process):
         self.conn = None
         self.client_address = None
         self.send_inst = True
+        pygame.init()
+        # pygame windows resolution 300x300
+        pygame.display.set_mode([300, 300])
 
     def connect(self):
         self.server_socket.bind(self.address)
@@ -92,10 +24,16 @@ class CollectTrainingData(Process):
         print ("Listening for client . . .")
         self.conn = self.server_socket.accept()[0].makefile('rb')
 
+    def getDirection(self):
+        pygame.event.pump()
+        keyboard_state = pygame.key.get_pressed()
+        self.direction[0][0] = keyboard_state[pygame.K_UP]
+        self.direction[0][1] = keyboard_state[pygame.K_LEFT]
+        self.direction[0][2] = keyboard_state[pygame.K_DOWN]
+        self.direction[0][3] = keyboard_state[pygame.K_RIGHT]
+
     def run(self):
-        global direction
-        global control_thread
-        global send_inst
+        self.direction = numpy.zeros([1, 4], dtype=numpy.float32)
 
         # collect images for training
         print ('Start collecting images...')
@@ -110,10 +48,10 @@ class CollectTrainingData(Process):
         try:
             stream_bytes = ' '
             frame = 1
-            while send_inst:
+            while self.send_inst:
                 stream_bytes += self.conn.read(1024)
                 if stream_bytes.find('end') != -1:
-                    send_inst = False
+                    self.send_inst = False
                     break
                 first = stream_bytes.find('\xff\xd8')
                 last = stream_bytes.find('\xff\xd9')
@@ -127,12 +65,12 @@ class CollectTrainingData(Process):
 
                     # save streamed images
                     cv2.imwrite('../training_images/frame{:>05}.jpg'.format(frame), image)
-
-                    print (direction[0])
+                    self. getDirection()
+                    print (self.direction[0])
 
                     frame += 1
 
-                    label_array = numpy.vstack((label_array, direction[0]))
+                    label_array = numpy.vstack((label_array, self.direction[0]))
 
                     #cv2.imshow('roi_image', roi)
                     # cv2.imshow('image', image)
@@ -166,12 +104,6 @@ class CollectTrainingData(Process):
 
 
 ctd = CollectTrainingData('0.0.0.0', 8001)
-#k = KeyInputThread()
-
 ctd.connect()
-
-#k.start()
 ctd.start()
-
-#k.join()
 ctd.join()
