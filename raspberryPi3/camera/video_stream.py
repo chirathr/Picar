@@ -3,7 +3,7 @@ import socket
 import struct
 import time
 import picamera
-
+from multiprocessing import Process
 
 class VideoStream(Process):
     def __init__(self, host='localhost', port=8001):
