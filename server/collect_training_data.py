@@ -23,14 +23,14 @@ class CollectTrainingData(Process):
         pygame.display.set_mode([300, 300])
 
     def connect(self):
-        self.video_server_socket.bind(self.video_address)
-        self.video_server_socket.listen(5)
-        self.video_connection = self.video_server_socket.accept()[0].makefile('rb')
-        print ("Connected to video client")
-
         self.motor_server_socket.bind(self.motor_address)
         self.motor_server_socket.listen(5)
         self.motor_connection = self.motor_server_socket.accept()
+        print ("Connected to motor client")
+        
+        self.video_server_socket.bind(self.video_address)
+        self.video_server_socket.listen(5)
+        self.video_connection = self.video_server_socket.accept()[0].makefile('rb')
         print ("Connected to video client")
 
     def getDirection(self):
@@ -117,7 +117,7 @@ class CollectTrainingData(Process):
         cv2.destroyAllWindows()
 
 
-ctd = CollectTrainingData('0.0.0.0', 8001)
+ctd = CollectTrainingData('0.0.0.0', 8000, 8001)
 ctd.connect()
 ctd.start()
 ctd.join()

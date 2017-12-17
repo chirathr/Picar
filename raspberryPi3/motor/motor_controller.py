@@ -16,6 +16,7 @@ class MotorController(Process):
         self.client_socket.connect(self.address)
 
     def run(self):
+        self.connect()
         data = self.client_socket.recv(2048)
 
         if data.strip() == "start":
@@ -34,5 +35,3 @@ class MotorController(Process):
     def close(self):
         self.client_socket.close()
         sys.exit()
-
-
