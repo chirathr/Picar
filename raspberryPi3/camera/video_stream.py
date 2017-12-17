@@ -14,7 +14,7 @@ class VideoStream(Process):
     def connect(self):
         print("Connectin to server at ", self.address[0], " ", self.address[1])
         self.client_socket.connect(self.address)
-        self.connection = client_socket.makefile('wb')
+        self.connection = self.client_socket.makefile('wb')
 
     def run(self):
         self.connect()
