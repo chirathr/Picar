@@ -1,3 +1,5 @@
-from motor.motor import Motor
+from camera.video_stream import VideoStream
 
-m = Motor()
+vs = VideoStream()
+vs.start()
+vs.join()

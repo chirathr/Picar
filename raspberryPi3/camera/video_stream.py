@@ -5,8 +5,9 @@ import time
 import picamera
 
 
-class MotorController(Process):
+class VideoStream(Process):
     def __init__(self, host='localhost', port=8001):
+        super(VideoStream, self).__init__()
         self.address = (host, port)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -30,7 +31,7 @@ class MotorController(Process):
                     self.connection.flush()
                     stream.seek(0)
                     self.connection.write(stream.read())
-                    if time.time() - start > 600:
+                    if time.time() - start > 60:
                         break
                     stream.seek(0)
                     stream.truncate()
