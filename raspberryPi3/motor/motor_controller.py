@@ -1,7 +1,7 @@
 import socket
 import time
 import sys
-import motor
+from motor.motor import Motor
 from multiprocessing import Process
 
 
