@@ -17,6 +17,7 @@ class VideoStream(Process):
         self.connection = client_socket.makefile('wb')
 
     def run(self):
+        self.connect()
         try:
             with picamera.PiCamera() as camera:
                 camera.resolution = (320, 240)      # pi camera resolution
