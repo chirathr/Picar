@@ -1,7 +1,7 @@
 import socket
 import time
 import sys
-from motor.motor import Motor
+from motor import Motor
 from multiprocessing import Process
 
 
@@ -36,6 +36,3 @@ class MotorController(Process):
         sys.exit()
 
 
-mC = MotorController("localhost", 8002)
-mC.startt()
-mC.join()
