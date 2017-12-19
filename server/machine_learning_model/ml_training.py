@@ -5,9 +5,9 @@ import glob
 
 class MLModel(object):
     def __init__(self):
-        self.image_array = np.zeros((1, 38400), dtype = np.float32)
-        self.label_array = np.zeros((1, 4), dtype = np.float32)
-        self.image_data  = np.zeros((1, 38400), dtype = np.float32)
+        self.image_array = np.zeros((1, 38400), dtype=np.float32)
+        self.label_array = np.zeros((1, 4), dtype=np.float32)
+        self.image_data = np.zeros((1, 38400), dtype=np.float32)
 
     def load_training_data(self, image_path, label_path):
         """
@@ -47,7 +47,7 @@ class MLModel(object):
         t1 = cv2.getTickCount()
 
         # print the time to load the image
-        time = (t1 - t0)/ cv2.getTickFrequency()
+        time = (t1 - t0) / cv2.getTickFrequency()
         print 'Image loaded in :', time
 
     def start(self):
@@ -73,7 +73,7 @@ class MLModel(object):
 
         t1 = cv2.getTickCount()
 
-        time = (t1 - t0)/ cv2.getTickFrequency()
+        time = (t1 - t0) / cv2.getTickFrequency()
         print 'Training complete in :', time
 
         # save param
@@ -89,8 +89,8 @@ class MLModel(object):
 
         print 'Testing...'
         train_rate = np.mean(prediction == true_labels)
-        print 'Train rate: %f:' % (train_rate*100)
+        print 'Train rate: %f:' % (train_rate * 100)
 
 
-mlmodel = MLModel()
-mlmodel.start()
+ml_model = MLModel()
+ml_model.start()
