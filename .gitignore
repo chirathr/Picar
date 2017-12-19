@@ -1,5 +1,5 @@
 *.pyc
 .idea
-training_images/
-training_data/
+input_data/
+label_data/
 mlp_xml/

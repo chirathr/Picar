@@ -23,7 +23,6 @@ class MLModel(object):
         # load all the label data
         self.label_array = np.load(label_path)['train_labels']
 
-
         # convert all images to numpy float32 array and stack them
         for image in images:
             # read an image
