@@ -1,5 +1,4 @@
 import socket
-import time
 import sys
 from motor import Motor
 from multiprocessing import Process
@@ -7,6 +6,7 @@ from multiprocessing import Process
 
 class MotorController(Process):
     def __init__(self, host='localhost', port=8000):
+        super(MotorController, self).__init__()
         self.address = (host, port)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.motor = Motor()
