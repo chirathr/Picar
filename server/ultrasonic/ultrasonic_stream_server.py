@@ -1,9 +1,14 @@
 import socket
+import sys
+
 
 class UltrasonicStreamServer(object):
-    def __inti__(self, host="localhost", port=8002):
+    def __init__(self, host="localhost", port=8002):
+        super(UltrasonicStreamServer, self).__init__()
         self.address = (host, port)
-		self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.conn = None
+        self.client_address = None
 
     def connect(self):
         self.server_socket.bind(self.address)
@@ -26,7 +31,12 @@ class UltrasonicStreamServer(object):
         self.conn.close()
         sys.exit()
 
-uS = UltrasonicStreamServer('192.168.43.50', 8002)
-us.connect()
-print us.get()
-us.close()
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print ("Usage: %s host port" % __file__)
+        sys.exit()
+    ultrasonicStreamServer = UltrasonicStreamServer(sys.argv[1], sys.argv[2])
+    ultrasonicStreamServer.connect()
+    print (ultrasonicStreamServer.get())
+    ultrasonicStreamServer.close()
