@@ -13,6 +13,7 @@ class Motor(object):
     4 - center
     5 - right
     """
+
     def __init__(self):
         # set the pin layout
         GPIO.setmode(GPIO.BOARD)
@@ -43,7 +44,7 @@ class Motor(object):
         """
         Speed between 0 and 10
         """
-        if (value <= 10 or value >= 0):
+        if value <= 10 or value >= 0:
             self.speed.start(value * 10)
         else:
             print("Speed should be between 0 and 10")
@@ -64,20 +65,20 @@ class Motor(object):
         """
         value in the range(0, 6)
         """
-        value = 5 - value   # so that left = 0 and right = 5
-        if (value > 5 or value < 0):
+        value = 5 - value  # so that left = 0 and right = 5
+        if value > 5 or value < 0:
             print("Direction values should be between 0 and 5")
         else:
             self.pwm.ChangeDutyCycle(4 + value)
 
     def left(self):
-        self.manual_direction(0) #left
+        self.manual_direction(0)  # left
 
     def right(self):
-        self.manual_direction(5) # right
+        self.manual_direction(5)  # right
 
     def straight(self):
-        self.manual_direction(3.5) # straight
+        self.manual_direction(3.5)  # straight
 
     def input(self, inp):
         if inp == 0:
@@ -96,19 +97,24 @@ class Motor(object):
             print("Wrong input to motor controller, choices are (0-5)")
 
     def drive(self, direction):
-        if (direction[0] == 0 and direction[1] == 0):
+        """
+        :param direction: [up, left, down, right]
+        :return:
+        """
+        if direction[1] == 0 and direction[3] == 0:
             self.straight()
-        if (direction[2] == 0 and direction[3] == 0):
+        if direction[0] == 0 and direction[2] == 0:
             self.stop()
 
-        if (direction[0] == 1):
-            self.left()
-        if (direction[1] == 1):
-            self.right()
-        if (direction[2] == 1):
+        if direction[0] == 1:
             self.forward()
-        if (direction[3] == 1):
+        if direction[1] == 1:
+            self.left()
+        if direction[2] == 1:
             self.backward()
+        if direction[3] == 1:
+            self.right()
 
-    def close(self):
+    @staticmethod
+    def close():
         GPIO.cleanup()
