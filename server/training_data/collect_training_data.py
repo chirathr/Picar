@@ -36,7 +36,7 @@ class CollectTrainingData(Process):
         # create a server for the motor stream
         self.motor_server_socket.bind(self.motor_address)
         self.motor_server_socket.listen(5)
-        self.motor_connection = self.motor_server_socket.accept()
+        self.motor_connection = self.motor_server_socket.accept()[0]
         print ("Connected to motor client")
 
         # server to get video stream from the car
@@ -60,6 +60,7 @@ class CollectTrainingData(Process):
 
     def run(self):
         self.connect()
+        print(self.motor_connection)
         self.motor_connection.send('start')
 
         # collect images for training
@@ -84,7 +85,6 @@ class CollectTrainingData(Process):
                 first = stream_bytes.find('\xff\xd8')
                 last = stream_bytes.find('\xff\xd9')
                 if first != -1 and last != -1:
-
                     # get the image from the stream
                     jpg = stream_bytes[first:last + 2]
 
@@ -103,10 +103,13 @@ class CollectTrainingData(Process):
                     # get input from the keyboard
                     self.get_direction()
 
-                    print (self.direction[0])
+                    data = str(int(self.direction[0][0])) + ',' + str(int(self.direction[0][1])) + ',' + \
+                        str(int(self.direction[0][2])) + ',' + str(int(self.direction[0][3]))
 
                     # sent keyboard input to the motor controller
-                    self.motor_connection.send(str(self.direction[0]).strip("[").strip("]"))
+                    print (data)
+
+                    self.motor_connection.send(data)
 
                     # add direction to the label array
                     label_array = numpy.vstack((label_array, self.direction[0]))
@@ -137,7 +140,7 @@ class CollectTrainingData(Process):
 
     def close(self):
         # close connection
-        self.motor_onnection.send("stop")
+        self.motor_connection.send("stop")
         self.motor_connection.close()
 
         # wait for a key and exit

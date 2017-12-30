@@ -21,8 +21,9 @@ class MotorController(Process):
 
         if data.strip() == "start":
             while True:
-                data = self.client_socket.recv(2048)
-                direction = data.split(", ")
+                data = self.client_socket.recv(2048).strip()
+                direction = map(int, data.split(','))
+
                 print(direction)
 
                 # code to run motor
