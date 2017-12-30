@@ -55,6 +55,6 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         print ("Error! usage: %s host-ip port" % __file__)
         sys.exit()
-    videoStream = VideoStream(sys.argv[1], sys.argv[2])
+    videoStream = VideoStream(sys.argv[1], int(sys.argv[2]))
     videoStream.start()
     videoStream.join()
