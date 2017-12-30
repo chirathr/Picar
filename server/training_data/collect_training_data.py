@@ -60,7 +60,7 @@ class CollectTrainingData(Process):
 
     def run(self):
         self.connect()
-        self.motor_connection.send("start")
+        self.motor_connection.send('start')
 
         # collect images for training
         print ('Start collecting images...')
