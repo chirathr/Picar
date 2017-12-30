@@ -39,6 +39,7 @@ class Motor(object):
         # stop and center the car initially
         self.stop()
         self.straight()
+        self.direction = [0, 0, 0, 0]
 
     def speed(self, value):
         """
@@ -101,19 +102,21 @@ class Motor(object):
         :param direction: [up, left, down, right]
         :return:
         """
-        if direction[1] == 0 and direction[3] == 0:
-            self.straight()
-        if direction[0] == 0 and direction[2] == 0:
-            self.stop()
 
-        if direction[0] == 1:
-            self.forward()
-        if direction[1] == 1:
-            self.left()
-        if direction[2] == 1:
-            self.backward()
-        if direction[3] == 1:
-            self.right()
+        if self.direction != direction:
+            if direction[1] == 0 and direction[3] == 0:
+                self.straight()
+            if direction[0] == 0 and direction[2] == 0:
+                self.stop()
+
+            if direction[0] == 1:
+                self.forward()
+            if direction[1] == 1:
+                self.left()
+            if direction[2] == 1:
+                self.backward()
+            if direction[3] == 1:
+                self.right()
 
     @staticmethod
     def close():
