@@ -22,6 +22,10 @@ class MotorController(Process):
         if data.strip() == "start":
             while True:
                 data = self.client_socket.recv(2048).strip()
+
+                if data == "stop":
+                    self.close()
+
                 direction = map(int, data.split(','))
 
                 print(direction)
@@ -29,9 +33,6 @@ class MotorController(Process):
                 # code to run motor
 
                 self.motor.drive(direction)
-
-                if data.strip() == "stop":
-                    self.close()
 
     def close(self):
         self.motor.close()
