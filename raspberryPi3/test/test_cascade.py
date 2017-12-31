@@ -17,7 +17,7 @@ camera.resolution = (320, 240)
 camera.framerate = 10
 rawCapture = PiRGBArray(camera, size=(320, 240))
 
-cascade = cv2.CascadeClassifier('../../cascades/speed_limit_30.xml')
+cascade = cv2.CascadeClassifier(sys.argv[1])
 
 # allow the camera to warm up
 time.sleep(0.1)
