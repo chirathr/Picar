@@ -5,9 +5,7 @@ import time
 import sys
 
 
-"""
-    Program to test cascade files using Pi cam
-"""
+# Program to test cascade files using Pi cam
 
 if len(sys.argv) != 2:
     print ('Usage: %s path/cascade.xml' % __file__)
@@ -19,7 +17,7 @@ camera.resolution = (320, 240)
 camera.framerate = 10
 rawCapture = PiRGBArray(camera, size=(320, 240))
 
-cascade = cv2.CascadeClassifier('../cascades/speed_limit_30.xml')
+cascade = cv2.CascadeClassifier('../../cascades/speed_limit_30.xml')
 
 # allow the camera to warm up
 time.sleep(0.1)
