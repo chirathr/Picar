@@ -1,3 +1,4 @@
+import glob
 import numpy
 import cv2
 import pygame
@@ -84,6 +85,7 @@ class CollectTrainingData(Process):
                 # fin the start and end of image in the binary data
                 first = stream_bytes.find('\xff\xd8')
                 last = stream_bytes.find('\xff\xd9')
+
                 if first != -1 and last != -1:
                     # get the image from the stream
                     jpg = stream_bytes[first:last + 2]
@@ -122,9 +124,13 @@ class CollectTrainingData(Process):
             # save training labels
             train_labels = label_array[1:, :]
 
+            # check for existing files and get a new name
+            label_files = glob.glob('./label_data/*.npz')
+            next_file = "./label_data/data{:>03}.npz".format(len(label_files))
+
             # save label data as a numpy file
-            numpy.savez('../training_data/data000.npz', train_labels=train_labels)
-            print("labels saved to file training_data/data000.npz")
+            numpy.savez(next_file, train_labels=train_labels)
+            print("labels saved to file %s" % next_file)
 
             e2 = cv2.getTickCount()
 
