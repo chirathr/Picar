@@ -1,7 +1,7 @@
 import pygame
-import sys
 import socket
 import sys
+
 
 class MotorControl(object):
     def __init__(self, host='localhost', port=8000):
@@ -25,7 +25,7 @@ class MotorControl(object):
         self.conn.send("start")
 
         pygame.init()
-        pygame.display.set_mode([300,300])
+        pygame.display.set_mode([300, 300])
 
         while True:
             for event in pygame.event.get():
@@ -37,26 +37,28 @@ class MotorControl(object):
                         self.close()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.direction[0] = 1
-                    if event.key == pygame.K_RIGHT:
-                        self.direction[1] = 1
                     if event.key == pygame.K_UP:
-                        self.direction[2] = 1
+                        self.direction[0] = 1
+                    if event.key == pygame.K_LEFT:
+                        self.direction[1] = 1
                     if event.key == pygame.K_DOWN:
+                        self.direction[2] = 1
+                    if event.key == pygame.K_RIGHT:
                         self.direction[3] = 1
 
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT:
-                        self.direction[0] = 0
-                    if event.key == pygame.K_RIGHT:
-                        self.direction[1] = 0
                     if event.key == pygame.K_UP:
-                        self.direction[2] = 0
+                        self.direction[0] = 0
+                    if event.key == pygame.K_LEFT:
+                        self.direction[1] = 0
                     if event.key == pygame.K_DOWN:
+                        self.direction[2] = 0
+                    if event.key == pygame.K_RIGHT:
                         self.direction[3] = 0
-                self.conn.send(str(self.direction).strip("[").strip("]"))
+                self.conn.send(str(self.direction[0]) + ',' + str(self.direction[1]) + ',' +
+                               str(self.direction[2]) + ',' + str(self.direction[3]))
 
-mC = MotorControl("localhost", 8002)
+
+mC = MotorControl('0.0.0.0', 8000)
 mC.connect()
 mC.start()
