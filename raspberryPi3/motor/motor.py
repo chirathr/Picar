@@ -39,6 +39,8 @@ class Motor(object):
         # stop and center the car initially
         self.stop()
         self.straight()
+
+        # direction variable
         self.direction = [0, 0, 0, 0]
 
     def speed(self, value):
@@ -62,60 +64,53 @@ class Motor(object):
         GPIO.output(self.in1, 0)
         GPIO.output(self.in2, 0)
 
-    def manual_direction(self, value):
-        """
-        value in the range(0, 6)
-        """
-        value = 5 - value  # so that left = 0 and right = 5
-        if value > 5 or value < 0:
-            print("Direction values should be between 0 and 5")
-        else:
-            self.pwm.ChangeDutyCycle(4 + value)
-
     def left(self):
-        self.manual_direction(0)  # left
+        self.pwm.ChangeDutyCycle(9)  # left
+        print("left")
 
     def right(self):
-        self.manual_direction(5)  # right
+        self.pwm.ChangeDutyCycle(4.5)  # straight
+        print("center")
 
     def straight(self):
-        self.manual_direction(3.5)  # straight
-
-    def input(self, inp):
-        if inp == 0:
-            self.stop()
-        elif inp == 1:
-            self.forward()
-        elif inp == 2:
-            self.backward()
-        elif inp == 3:
-            self.left()
-        elif inp == 4:
-            self.straight()
-        elif inp == 5:
-            self.right()
-        else:
-            print("Wrong input to motor controller, choices are (0-5)")
+        self.pwm.ChangeDutyCycle(7)  # center
+        print("right")
 
     def drive(self, direction):
         """
-        :param direction: [up, left, down, right]
+        :param direction: [forward, right, backward, left]
         :return:
         """
+        print(self.direction, direction, " ", self.direction != direction)
+
         if self.direction != direction:
+
+            # center
             if direction[1] == 0 and direction[3] == 0:
                 self.straight()
+
+            # stop
             if direction[0] == 0 and direction[2] == 0:
                 self.stop()
 
+            # multiple commands
             if direction[0] == 1:
                 self.forward()
-            if direction[1] == 1:
-                self.left()
-            if direction[2] == 1:
+                if direction[1] == 1:
+                    self.right()
+                if direction[3] == 1:
+                    self.left()
+            elif direction[2] == 1:
                 self.backward()
-            if direction[3] == 1:
-                self.right()
+                if direction[1] == 1:
+                    self.right()
+                if direction[3] == 1:
+                    self.left()
+            else:
+                if direction[1] == 1:
+                    self.right()
+                if direction[3] == 1:
+                    self.left()
 
     @staticmethod
     def close():

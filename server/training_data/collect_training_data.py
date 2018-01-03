@@ -55,9 +55,9 @@ class CollectTrainingData(Process):
 
         # assign the keyboard states into the direction array
         self.direction[0][0] = keyboard_state[pygame.K_UP]
-        self.direction[0][1] = keyboard_state[pygame.K_LEFT]
+        self.direction[0][1] = keyboard_state[pygame.K_RIGHT]
         self.direction[0][2] = keyboard_state[pygame.K_DOWN]
-        self.direction[0][3] = keyboard_state[pygame.K_RIGHT]
+        self.direction[0][3] = keyboard_state[pygame.K_LEFT]
 
     def run(self):
         self.connect()
@@ -111,7 +111,7 @@ class CollectTrainingData(Process):
                     # sent keyboard input to the motor controller
                     print (data)
 
-                    # self.motor_connection.send(data)
+                    self.motor_connection.send(data)
 
                     # add direction to the label array
                     label_array = numpy.vstack((label_array, self.direction[0]))
