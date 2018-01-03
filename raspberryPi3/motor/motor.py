@@ -69,12 +69,12 @@ class Motor(object):
         print("left")
 
     def right(self):
-        self.pwm.ChangeDutyCycle(4.5)  # straight
-        print("center")
+        self.pwm.ChangeDutyCycle(4.5)  # right
+        print("right")
 
     def straight(self):
-        self.pwm.ChangeDutyCycle(7)  # center
-        print("right")
+        self.pwm.ChangeDutyCycle(7)  # straight
+        print("straight")
 
     def drive(self, direction):
         """
@@ -84,6 +84,7 @@ class Motor(object):
         print(self.direction, direction, " ", self.direction != direction)
 
         if self.direction != direction:
+            self.direction = direction[:]
 
             # center
             if direction[1] == 0 and direction[3] == 0:
