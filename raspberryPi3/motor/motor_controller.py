@@ -9,10 +9,10 @@ class MotorController(Process):
         super(MotorController, self).__init__()
         self.address = (host, port)
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.motor = Motor()
+        # self.motor = Motor()
 
     def connect(self):
-        print("Connectin to server at ", self.address[0], " ", self.address[1])
+        print("Connecting to server at ", self.address[0], " ", self.address[1])
         self.client_socket.connect(self.address)
 
     def run(self):
@@ -32,10 +32,10 @@ class MotorController(Process):
 
                 # code to run motor
 
-                self.motor.drive(direction)
+                # self.motor.drive(direction)
 
     def close(self):
-        self.motor.close()
+        # self.motor.close()
         self.client_socket.close()
         sys.exit()
 

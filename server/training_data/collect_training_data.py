@@ -111,7 +111,7 @@ class CollectTrainingData(Process):
                     # sent keyboard input to the motor controller
                     print (data)
 
-                    self.motor_connection.send(data)
+                    # self.motor_connection.send(data)
 
                     # add direction to the label array
                     label_array = numpy.vstack((label_array, self.direction[0]))

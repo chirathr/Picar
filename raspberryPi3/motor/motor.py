@@ -33,7 +33,7 @@ class Motor(object):
         # set servo and speed pin as PWM pins
         self.pwm = GPIO.PWM(self.servoPin, 50)
         self.speed = GPIO.PWM(self.sp, 50)
-        self.speed.start(50)
+        self.speed.start(60)
         self.pwm.start(0)
 
         # stop and center the car initially
@@ -103,10 +103,10 @@ class Motor(object):
         :return:
         """
         if self.direction != direction:
-            # if direction[1] == 0 and direction[3] == 0:
-            #     self.straight()
-            # if direction[0] == 0 and direction[2] == 0:
-            #     self.stop()
+            if direction[1] == 0 and direction[3] == 0:
+                self.straight()
+            if direction[0] == 0 and direction[2] == 0:
+                self.stop()
 
             if direction[0] == 1:
                 self.forward()
