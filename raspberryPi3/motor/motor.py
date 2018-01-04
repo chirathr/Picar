@@ -32,8 +32,8 @@ class Motor(object):
 
         # set servo and speed pin as PWM pins
         self.pwm = GPIO.PWM(self.servoPin, 50)
-        self.speed = GPIO.PWM(self.sp, 50)
-        self.speed.start(60)
+        self.speed = GPIO.PWM(self.sp, 40)
+        self.speed.start(40)
         self.pwm.start(0)
 
         # stop and center the car initially

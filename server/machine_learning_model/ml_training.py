@@ -65,7 +65,7 @@ class MLModel(object):
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
         model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001))
 
-        self.load_training_data('../training_images/*.jpg', '../training_data/data000.npz')
+        self.load_training_data('../training_data/image_data/data000/*.jpg', '../training_data/label_data/data000.npz')
 
         print 'Training MLP ...'
         print (self.image_array.shape, self.label_array.shape)
