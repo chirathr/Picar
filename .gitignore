@@ -1,6 +1,6 @@
 *.pyc
 .idea
-input_data/
+image_data/
 label_data/
 mlp_xml/
 *.npz

@@ -4,10 +4,14 @@ import cv2
 import pygame
 import socket
 import sys
+import os
 from multiprocessing import Process
 
 
 class CollectTrainingData(Process):
+
+    label_path = 'label_data/'
+    image_path = 'image_data/'
 
     def __init__(self, host='localhost', motor_port=8000, video_port=8001):
         super(CollectTrainingData, self).__init__()
@@ -32,6 +36,26 @@ class CollectTrainingData(Process):
 
         # set pygame windows resolution as 300x300
         pygame.display.set_mode([300, 300])
+
+    def get_next_label_name(self):
+        """
+        Checks the folder and gets the next sequence number to save to training data
+        :return: folder/filename
+        """
+        # check for existing files and get a new name
+        label_files = glob.glob('./label_data/*.npz')
+
+        # next file/folder name as data0xx
+        next_path = "data{:>03}".format(len(label_files))
+
+        # create a new folder inside input_data
+        if not os.path.exists(self.image_path + next_path):
+            os.makedirs(self.image_path + next_path)
+        else:
+            print("Error: folder already exists")
+            sys.exit(0)
+
+        return [self.image_path + next_path + '/', self.label_path + next_path + '.npz']
 
     def connect(self):
         # create a server for the motor stream
@@ -64,13 +88,16 @@ class CollectTrainingData(Process):
         print(self.motor_connection)
         # self.motor_connection.send('start')
 
-        # collect images for training
-        print ('Start collecting images...')
-
         e1 = cv2.getTickCount()
 
         # [front, right, reverse, left]
         label_array = numpy.zeros((1, 4), dtype=numpy.float32)
+
+        # get image folder and label file names
+        image_folder, label_file = self.get_next_label_name()
+
+        # collect images for training
+        print ('Start collecting images...')
 
         try:
             stream_bytes = ' '
@@ -100,7 +127,7 @@ class CollectTrainingData(Process):
                     # roi = image[120:240, :]
 
                     # save streamed images
-                    cv2.imwrite('../training_images/frame{:>05}.jpg'.format(frame), image)
+                    cv2.imwrite(image_folder + 'frame{:>05}.jpg'.format(frame), image)
 
                     # get input from the keyboard
                     self.get_direction()
@@ -124,13 +151,10 @@ class CollectTrainingData(Process):
             # save training labels
             train_labels = label_array[1:, :]
 
-            # check for existing files and get a new name
-            label_files = glob.glob('./label_data/*.npz')
-            next_file = "./label_data/data{:>03}.npz".format(len(label_files))
-
             # save label data as a numpy file
-            numpy.savez(next_file, train_labels=train_labels)
-            print("labels saved to file %s" % next_file)
+            numpy.savez(label_file, train_labels=train_labels)
+            print("labels saved to file %s" % label_file)
+            print("images saved to folder %s" % image_folder)
 
             e2 = cv2.getTickCount()
 
