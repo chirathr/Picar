@@ -62,7 +62,7 @@ class CollectTrainingData(Process):
     def run(self):
         self.connect()
         print(self.motor_connection)
-        self.motor_connection.send('start')
+        # self.motor_connection.send('start')
 
         # collect images for training
         print ('Start collecting images...')
@@ -146,7 +146,7 @@ class CollectTrainingData(Process):
 
     def close(self):
         # close connection
-        self.motor_connection.send("stop")
+        # self.motor_connection.send("stop")
         self.motor_connection.close()
 
         # wait for a key and exit

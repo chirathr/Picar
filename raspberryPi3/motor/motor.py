@@ -48,7 +48,7 @@ class Motor(object):
         Speed between 0 and 10
         """
         if value <= 10 or value >= 0:
-            self.speed.start(value * 10)
+            self.speed.ChangeDutyCycle(value * 10)
         else:
             print("Speed should be between 0 and 10")
 

@@ -22,7 +22,7 @@ class MotorControl(object):
         sys.exit()
 
     def start(self):
-        self.conn.send("start")
+        # self.conn.send("start")
 
         pygame.init()
         pygame.display.set_mode([300, 300])
@@ -55,8 +55,8 @@ class MotorControl(object):
                         self.direction[2] = 0
                     if event.key == pygame.K_RIGHT:
                         self.direction[3] = 0
-                self.conn.send(str(self.direction[0]) + ',' + str(self.direction[1]) + ',' +
-                               str(self.direction[2]) + ',' + str(self.direction[3]))
+                self.conn.send(str(self.direction[0]) + ',' + str(self.direction[3]) + ',' +
+                               str(self.direction[2]) + ',' + str(self.direction[1]))
 
 
 mC = MotorControl('0.0.0.0', 8000)
