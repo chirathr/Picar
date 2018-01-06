@@ -12,7 +12,7 @@ class MLModel(object):
 
         self.training_data_base_url = '../training_data/'
 
-    def load_training_data(self, file_name):
+    def load_training_data_image(self, file_name):
         """
             This function takes all the images from the image path and converts
             to an numpy float32 array. It also loads the saved label data.
@@ -54,6 +54,30 @@ class MLModel(object):
         time = (t1 - t0) / cv2.getTickFrequency()
         print 'Image loaded in :', time
 
+    def load_training_data(self, file_name):
+        # start timer
+        t0 = cv2.getTickCount()
+
+        # load all the label data
+        self.label_array = np.load(self.training_data_base_url + 'label_data/' + file_name + '.npz')['train_labels']
+
+        self.image_array = np.load(self.training_data_base_url + 'image_data/img-' + file_name + '.npz')['image_data']
+
+        print (self.training_data_base_url + 'image_data/img-' + file_name + '.npz')
+
+        self.label_array = self.label_array[1:]
+
+        print self.image_array.shape
+        print self.label_array.shape
+
+        # end timer
+        t1 = cv2.getTickCount()
+
+        # print the time to load the image
+        time = (t1 - t0) / cv2.getTickFrequency()
+
+        print 'Image loaded in :', time
+
     def start(self):
         """
             Takes the label_array and image_array trains the ANN_MLP network.
@@ -87,7 +111,7 @@ class MLModel(object):
         print 'Training complete in :', time
 
         # save param
-        model.save('./mlp_xml/mlp.xml')
+        # model.save('./mlp_xml/mlp.xml')
 
         print 'Ran for %d iterations' % num_iter
 
