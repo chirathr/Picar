@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import sys
 import glob
 
 
@@ -9,7 +10,9 @@ class MLModel(object):
         self.label_array = np.zeros((1, 4), dtype=np.float32)
         self.image_data = np.zeros((1, 38400), dtype=np.float32)
 
-    def load_training_data(self, image_path, label_path):
+        self.training_data_base_url = '../training_data/'
+
+    def load_training_data(self, file_name):
         """
             This function takes all the images from the image path and converts
             to an numpy float32 array. It also loads the saved label data.
@@ -17,14 +20,15 @@ class MLModel(object):
         # start timer
         t0 = cv2.getTickCount()
 
-        # get all the jpeg images in the path
-        images = glob.glob(image_path)
-
         # load all the label data
-        self.label_array = np.load(label_path)['train_labels']
+        self.label_array = np.load(self.training_data_base_url + 'label_data/' + file_name + '.npz')['train_labels']
+
+        # get all images
+
+        images_files = glob.glob(self.training_data_base_url + 'image_data/' + file_name + '/*.jpg')
 
         # convert all images to numpy float32 array and stack them
-        for image in images:
+        for image in images_files:
             # read an image
             img = cv2.imread(image, 0)
 
@@ -65,7 +69,13 @@ class MLModel(object):
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
         model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001))
 
-        self.load_training_data('../training_data/image_data/data000/*.jpg', '../training_data/label_data/data000.npz')
+        self.load_training_data(sys.argv[1])
+
+        mlp_file = glob.glob('./mlp_xml/*.xml')
+
+        if len(mlp_file) > 0:
+            print ('MLP data already found: ' + mlp_file[0])
+            model.load(mlp_file[0])
 
         print 'Training MLP ...'
         print (self.image_array.shape, self.label_array.shape)
@@ -77,7 +87,7 @@ class MLModel(object):
         print 'Training complete in :', time
 
         # save param
-        model.save('../mlp_xml/mlp.xml')
+        model.save('./mlp_xml/mlp.xml')
 
         print 'Ran for %d iterations' % num_iter
 

@@ -4,3 +4,4 @@ image_data/
 label_data/
 mlp_xml/
 *.npz
+*.xml
