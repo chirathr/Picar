@@ -2,7 +2,6 @@ import numpy
 import cv2
 import socket
 import sys
-import os
 from multiprocessing import Process
 
 
@@ -44,14 +43,8 @@ class SelfDrivingModel(Process):
         # create ANN(Artificial Neural Networks) MLP (multi-layer perceptrons)
         self.model = cv2.ml.ANN_MLP_create()
 
-        # Train method as
-        self.model.setTrainMethod(cv2.ml.ANN_MLP_RPROP | cv2.ml.ANN_MLP_UPDATE_WEIGHTS)
-        self.model.setLayerSizes(numpy.int32([38400, 32, 4]))
-        self.model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
-        self.model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001))
-
         try:
-            self.model.load(self.mlp_xml_path)
+            self.model = self.model.load(self.mlp_xml_path)
             print ('Loading %s ' % self.mlp_xml_path)
         except RuntimeError:
             print ('Error loading file, check if file is found at %s' % self.mlp_xml_path)

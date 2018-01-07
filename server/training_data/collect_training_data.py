@@ -185,8 +185,8 @@ class CollectTrainingData(Process):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print ("Error! usage: %s host-ip motor-port video-port" % __file__)
+    if len(sys.argv) != 3:
+        print ("Error! usage: %s host-ip port" % __file__)
         sys.exit()
     ctd = CollectTrainingData(sys.argv[1], int(sys.argv[2]), int(sys.argv[2]) + 1)
     ctd.start()

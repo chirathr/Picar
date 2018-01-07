@@ -7,29 +7,32 @@ class Ultrasonic(object):
     def __init__(self):
         print("setting up pins")
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(FRONT_TRIGGER, GPIO.OUT)         #initialising port as output
-        GPIO.setup(RIGHT_TRIGGER, GPIO.OUT)         #initialising port as output
-        GPIO.setup(BACK_TRIGGER, GPIO.OUT)          #initialising port as output
-        GPIO.setup(LEFT_TRIGGER, GPIO.OUT)          #initialising port as output
-        GPIO.setup(ECHO_PIN, GPIO.IN)               #initialising port as input
+        GPIO.setup(FRONT_TRIGGER, GPIO.OUT)  # initialising port as output
+        GPIO.setup(RIGHT_TRIGGER, GPIO.OUT)  # initialising port as output
+        GPIO.setup(BACK_TRIGGER, GPIO.OUT)  # initialising port as output
+        GPIO.setup(LEFT_TRIGGER, GPIO.OUT)  # initialising port as output
+        GPIO.setup(ECHO_PIN, GPIO.IN)  # initialising port as input
 
-        GPIO.output(FRONT_TRIGGER, False)           #initialising port value as False
-        GPIO.output(RIGHT_TRIGGER, False)           #initialising port value as False
-        GPIO.output(BACK_TRIGGER, False)            #initialising port value as False
-        GPIO.output(LEFT_TRIGGER, False)            #initialising port value as False
+        GPIO.output(FRONT_TRIGGER, False)  # initialising port value as False
+        GPIO.output(RIGHT_TRIGGER, False)  # initialising port value as False
+        GPIO.output(BACK_TRIGGER, False)  # initialising port value as False
+        GPIO.output(LEFT_TRIGGER, False)  # initialising port value as False
 
         print("Waiting For Sensor To Settle")
         time.sleep(1)
 
-    def measure(self,TRIG,ECHO_PIN):                #measuering the distance
-        GPIO.output(TRIG, True)
+    @staticmethod
+    def measure(trigger_pin, echo_pin):  # measuring the distance
+        GPIO.output(trigger_pin, True)
         time.sleep(0.00001)
-        GPIO.output(TRIG, False)
+        GPIO.output(trigger_pin, False)
+        pulse_start = 0
+        pulse_end = 0
 
-        while GPIO.input(ECHO_PIN)==0:
+        while GPIO.input(echo_pin) == 0:
             pulse_start = time.time()
 
-        while GPIO.input(ECHO_PIN)==1:
+        while GPIO.input(echo_pin) == 1:
             pulse_end = time.time()
 
         pulse_duration = pulse_end - pulse_start
@@ -39,7 +42,7 @@ class Ultrasonic(object):
         distance = round(distance, 2)
         return distance
 
-    def distance(self):                                #calling 4 Sensors and returning distance
+    def distance(self):  # calling 4 Sensors and returning distance
         front = self.measure(FRONT_TRIGGER, ECHO_PIN)
         time.sleep(0.025)
         right = self.measure(RIGHT_TRIGGER, ECHO_PIN)
@@ -51,9 +54,11 @@ class Ultrasonic(object):
         print([front, right, back, left])
         return [front, right, back, left]
 
-    def close(self):                        #exit
-        GPIO.setup(ECHO_PIN,GPIO.IN)
+    @staticmethod
+    def close():  # exit
+        GPIO.setup(ECHO_PIN, GPIO.IN)
         GPIO.cleanup()
+
 
 var = Ultrasonic()
 print var.distance()
