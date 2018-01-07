@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import sys
 import glob
+import os
 
 
 class MLModel(object):
@@ -123,13 +124,19 @@ class MLModel(object):
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
         model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001))
 
-        self.load_all_training_data()
+        if len(sys.argv) == 2:
+            self.load_training_data(sys.argv[1])
+        else:
+            self.load_all_training_data()
 
         mlp_file = glob.glob('./mlp_xml/*.xml')
 
         if len(mlp_file) > 0:
             print ('MLP data already found: ' + mlp_file[0])
             model.load(mlp_file[0])
+        else:
+            if not os.path.exists('./mlp_xml/'):
+                os.makedirs('./mlp_xml/')
 
         print 'Training MLP ...'
         print (self.image_array.shape, self.label_array.shape)

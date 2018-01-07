@@ -37,6 +37,12 @@ class CollectTrainingData(Process):
         # set pygame windows resolution as 300x300
         pygame.display.set_mode([300, 300])
 
+        if not os.path.exists(self.label_path):
+            os.makedirs(self.label_path)
+
+        if not os.path.exists(self.image_path):
+            os.makedirs(self.image_path)
+
     def get_next_label_name(self):
         """
         Checks the folder and gets the next sequence number to save to training data
