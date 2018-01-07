@@ -133,7 +133,8 @@ class MLModel(object):
 
         if len(mlp_file) > 0:
             print ('MLP data already found: ' + mlp_file[0])
-            model.load(mlp_file[0])
+            model = model.load(mlp_file[0])
+            print ('IsTrained : ' + str(model.isTrained()))
         else:
             if not os.path.exists('./mlp_xml/'):
                 os.makedirs('./mlp_xml/')

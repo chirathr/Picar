@@ -23,7 +23,7 @@ class CollectTrainingData(Process):
         self.motor_address = (host, motor_port)
         self.motor_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.send_inst = True
+        self.stop_data_collection = False
 
         self.motor_connection = None
         self.video_connection = None
@@ -89,6 +89,9 @@ class CollectTrainingData(Process):
         self.direction[0][2] = keyboard_state[pygame.K_DOWN]
         self.direction[0][3] = keyboard_state[pygame.K_LEFT]
 
+        if keyboard_state[pygame.K_ESCAPE] or keyboard_state[pygame.K_q]:
+            self.stop_data_collection = True
+
     def run(self):
         self.connect()
         print(self.motor_connection)
@@ -113,6 +116,9 @@ class CollectTrainingData(Process):
 
                 # stop saving data on seeing 'stop'
                 if stream_bytes.find('stop') != -1:
+                    break
+
+                if self.stop_data_collection:
                     break
 
                 # fin the start and end of image in the binary data
