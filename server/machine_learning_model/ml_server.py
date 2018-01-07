@@ -9,7 +9,7 @@ from multiprocessing import Process
 
 class SelfDrivingModel(Process):
 
-    mlp_xml_path = './mlp_xml/mlp.xml'
+    mlp_xml_path = 'mlp_xml/mlp.xml'
 
     def __init__(self, host='localhost', motor_port=8000, video_port=8001):
         super(SelfDrivingModel, self).__init__()
@@ -77,6 +77,8 @@ class SelfDrivingModel(Process):
 
         self.load_ann_mlp_model()
 
+        self.model.load(self.mlp_xml_path)
+
         # collect images for training
         print ('Start collecting images...')
 
@@ -143,7 +145,7 @@ class SelfDrivingModel(Process):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 3:
         print ("Error! usage: %s host-ip motor-port" % __file__)
         sys.exit()
     ctd = SelfDrivingModel(sys.argv[1], int(sys.argv[2]), int(sys.argv[2]) + 1)

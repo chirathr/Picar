@@ -141,7 +141,7 @@ class MLModel(object):
         print 'Training complete in :', time
 
         # save param
-        # model.save('./mlp_xml/mlp.xml')
+        model.save('./mlp_xml/mlp.xml')
 
         print 'Ran for %d iterations' % num_iter
 
