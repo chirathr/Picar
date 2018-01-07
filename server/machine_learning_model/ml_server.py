@@ -40,7 +40,7 @@ class SelfDrivingModel(Process):
         print ("Connected to video client")
 
     def load_ann_mlp_model(self):
-        # create ANN(Artificial Neural Networks) MLP (multi-layer perceptrons)
+        # create ANN(Artificial Neural Networks) MLP (multi-layer perceptions)
         self.model = cv2.ml.ANN_MLP_create()
 
         try:
@@ -50,10 +50,16 @@ class SelfDrivingModel(Process):
             print ('Error loading file, check if file is found at %s' % self.mlp_xml_path)
 
     @staticmethod
-    def direction_normalise(direction):
+    def direction_normalise(prediction):
+
+        # [front, right, reverse, left]
+        direction = numpy.zeros((1, 4), dtype=numpy.float32)
+
         for i in range(4):
-            if direction[0][i] > 0:
+            if prediction[0][i] > 0:
                 direction[0][i] = 1
+
+        return direction
 
     def run(self):
         self.connect()
@@ -61,9 +67,6 @@ class SelfDrivingModel(Process):
         # self.motor_connection.send('start')
 
         e1 = cv2.getTickCount()
-
-        # [front, right, reverse, left]
-        direction = numpy.zeros((1, 4), dtype=numpy.float32)
 
         # create and load the ann_mlp from file
 
@@ -110,7 +113,7 @@ class SelfDrivingModel(Process):
                     print (prediction)
 
                     # normalise direction to prevent errors
-                    self.direction_normalise(direction)
+                    direction = self.direction_normalise(prediction[1])
 
                     data = str(int(direction[0][0])) + ',' + str(int(direction[0][1])) + ',' + \
                         str(int(direction[0][2])) + ',' + str(int(direction[0][3]))
