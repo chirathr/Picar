@@ -5,7 +5,7 @@ if len(sys.argv) != 2:
     print ('Usage: %s data00x' % __file__)
     sys.exit(0)
 
-label_file = 'label_data/old_data/' + sys.argv[1] + '.npz'
+label_file = 'label_data/raw_data/' + sys.argv[1] + '.npz'
 
 # forward, right, backward, left
 label_data = np.load(label_file)['train_labels'][1:]

@@ -10,7 +10,7 @@ from multiprocessing import Process
 
 class CollectTrainingData(Process):
 
-    label_path = 'label_data/'
+    label_path = 'label_data/raw_data/'
     image_path = 'image_data/'
 
     def __init__(self, host='localhost', motor_port=8000, video_port=8001):

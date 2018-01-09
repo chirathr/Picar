@@ -29,6 +29,7 @@ class MLModel(object):
             print self.image_array.shape
             print self.label_array.shape
 
+        print ('All labels loaded successfully')
         print self.image_array.shape
         print self.label_array.shape
 

@@ -55,9 +55,19 @@ class SelfDrivingModel(Process):
         # [front, right, reverse, left]
         direction = numpy.zeros((1, 4), dtype=numpy.float32)
 
-        for i in range(4):
-            if prediction[0][i] > 0:
-                direction[0][i] = 1
+        # forward-left
+        if prediction == 0:
+            direction[0][0] = 1
+            direction[0][3] = 1
+
+        # forward
+        if prediction == 1:
+            direction[0][0] = 1
+
+        # forward-right
+        if prediction == 2:
+            direction[0][1] = 1
+            direction[0][3] = 1
 
         return direction
 
@@ -110,16 +120,14 @@ class SelfDrivingModel(Process):
                     # Let the neural network make the prediction
                     prediction = self.model.predict(image_array)
 
-                    print (prediction)
-
                     # normalise direction to prevent errors
-                    direction = self.direction_normalise(prediction[1])
+                    direction = self.direction_normalise(prediction[0])
 
                     data = str(int(direction[0][0])) + ',' + str(int(direction[0][1])) + ',' + \
                         str(int(direction[0][2])) + ',' + str(int(direction[0][3]))
 
                     # sent keyboard input to the motor controller
-                    print (data)
+                    print (prediction, data)
 
                     self.motor_connection.send(data)
 
