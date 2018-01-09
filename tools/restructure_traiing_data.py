@@ -1,14 +1,12 @@
 import numpy as np
 import sys
 
-if len(sys.argv) != 2:
-    print ('Usage: %s data00x' % __file__)
+if len(sys.argv) != 3:
+    print ('Usage: %s path/to/data00x.npz path/to/output/data00x.npz' % __file__)
     sys.exit(0)
 
-label_file = 'label_data/raw_data/' + sys.argv[1] + '.npz'
-
 # forward, right, backward, left
-label_data = np.load(label_file)['train_labels'][1:]
+label_data = np.load(sys.argv[1])['train_labels'][1:]
 
 
 # forward_left, forward, forward_right
@@ -29,4 +27,4 @@ for label_array in label_data:
 
     new_label_array = np.vstack((new_label_array, temp_label_array))
 
-np.savez('label_data/' + sys.argv[1] + '.npz', label_data=new_label_array[1:])
+np.savez(sys.argv[2], label_data=new_label_array[1:])

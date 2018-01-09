@@ -4,13 +4,13 @@ import glob
 import sys
 
 
-if len(sys.argv) != 2:
-    print ("Error! usage: %s data0xx" % __file__)
+if len(sys.argv) != 3:
+    print ("Error! usage: %s path/to/img/data0xx/ path/to/img/output/data00(npz file)" % __file__)
     sys.exit()
 
 e1 = cv2.getTickCount()
 
-image_files = glob.glob('./image_data/' + sys.argv[1] + '/*.jpg')
+image_files = glob.glob(sys.argv[1] + '/*.jpg')
 
 image_data = np.zeros((1, 38400), dtype=np.float32)
 
@@ -32,7 +32,7 @@ print (image_data.shape)
 
 print ('saving file as img-%s.npz' % sys.argv[1])
 
-np.savez('./image_data/img-' + sys.argv[1] + '.npz', image_data=image_data)
+np.savez(sys.argv[2] + '.npz', image_data=image_data)
 
 e2 = cv2.getTickCount()
 
