@@ -8,7 +8,7 @@ import os
 class MLModel(object):
     def __init__(self):
         self.image_array = np.zeros((1, 38400), dtype=np.float32)
-        self.label_array = np.zeros((1, 2), dtype=np.float32)
+        self.label_array = np.zeros((1, 3), dtype=np.float32)
 
         self.training_data_base_url = '../training_data/'
 
@@ -21,12 +21,7 @@ class MLModel(object):
         label_files = glob.glob(self.training_data_base_url + 'label_data/*.npz')
 
         for label_file in label_files:
-            label_data = np.load(label_file)['train_labels'][1:]
-            for label in label_data:
-                label_data = np.zeros((1, 2), dtype=np.float32)
-                label_data[0][0] = label[3]
-                label_data[0][1] = label[1]
-                self.label_array = np.vstack((self.label_array, label_data))
+            self.label_array = np.vstack((self.label_array, np.load(label_file)['label_data']))
 
             self.image_array = np.vstack((self.image_array, np.load(
                 self.training_data_base_url + 'image_data/img-' + label_file[-11:])['image_data']))
@@ -56,7 +51,7 @@ class MLModel(object):
 
         # Train method as
         model.setTrainMethod(cv2.ml.ANN_MLP_RPROP | cv2.ml.ANN_MLP_UPDATE_WEIGHTS)
-        model.setLayerSizes(np.int32([38400, 32, 2]))
+        model.setLayerSizes(np.int32([38400, 32, 3]))
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
         model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001))
 
