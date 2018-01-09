@@ -54,7 +54,7 @@ class MLModel(object):
         model.setTrainMethod(cv2.ml.ANN_MLP_RPROP | cv2.ml.ANN_MLP_UPDATE_WEIGHTS)
         model.setLayerSizes(np.int32([38400, 32, 3]))
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
-        model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001))
+        model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 700, 0.0001))
 
         self.load_all_training_data()
 
