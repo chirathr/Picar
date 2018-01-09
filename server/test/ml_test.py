@@ -3,23 +3,15 @@ import numpy
 import sys
 
 
-def direction_normalise(prediction):
-    # [front, right, reverse, left]
-    direction = numpy.zeros((1, 4), dtype=numpy.float32)
+def check(prediction, label_truth):
 
-    for i in range(4):
-        if prediction[0][i] > 0:
-            direction[0][i] = 1
+    print (prediction, label_truth)
 
-    return direction
-
-
-def check(label_predicted, label_truth):
-
-    # print (label_predicted, label_truth)
-
-    if label_predicted == label_truth:
-        return 1
+    if 3 > prediction >= 0:
+        if label_truth[prediction] == 1:
+            return 1
+    else:
+        print ('Error prediction should be between 0 and 2')
     return 0
 
 
@@ -36,10 +28,7 @@ else:
     correct = 0
 
     for i in range(len(image_data)):
-        output = model.predict(image_data[i:i+1])[1]
-
-        print (direction_normalise(output), label_data[i])
-
-        correct += check(direction_normalise(output)[0].tolist(), label_data[i].tolist())
+        output = model.predict(image_data[i:i+1])[0]
+        correct += check(output, label_data[i].tolist())
 
     print ('Accuracy : %s' % str((correct * 100)/len(image_data)))
