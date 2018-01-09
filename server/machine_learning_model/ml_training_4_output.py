@@ -129,15 +129,15 @@ class MLModel(object):
         else:
             self.load_all_training_data()
 
-        mlp_file = glob.glob('./mlp_xml/*.xml')
+        mlp_file = glob.glob('./mlp_xml_4_output/*.xml')
 
         if len(mlp_file) > 0:
             print ('MLP data already found: ' + mlp_file[0])
             model = model.load(mlp_file[0])
             print ('IsTrained : ' + str(model.isTrained()))
         else:
-            if not os.path.exists('./mlp_xml/'):
-                os.makedirs('./mlp_xml/')
+            if not os.path.exists('./mlp_xml_4_output/'):
+                os.makedirs('./mlp_xml_4_output/')
 
         print 'Training MLP ...'
         print (self.image_array.shape, self.label_array.shape)
@@ -149,7 +149,7 @@ class MLModel(object):
         print 'Training complete in :', time
 
         # save param
-        model.save('./mlp_xml/mlp.xml')
+        model.save('./mlp_xml_4_output/mlp.xml')
 
         print 'Ran for %d iterations' % num_iter
 

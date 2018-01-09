@@ -7,7 +7,7 @@ from multiprocessing import Process
 
 class SelfDrivingModel(Process):
 
-    mlp_xml_path = 'mlp_xml/mlp.xml'
+    mlp_xml_path = 'mlp_xml_4_output/mlp.xml'
 
     def __init__(self, host='localhost', motor_port=8000, video_port=8001):
         super(SelfDrivingModel, self).__init__()
