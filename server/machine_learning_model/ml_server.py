@@ -40,11 +40,9 @@ class SelfDrivingModel(Process):
         print ("Connected to video client")
 
     def load_ann_mlp_model(self):
-        # create ANN(Artificial Neural Networks) MLP (multi-layer perceptions)
-        self.model = cv2.ml.ANN_MLP_create()
-
+        # load ANN(Artificial Neural Networks) MLP (multi-layer perceptions)
         try:
-            self.model = self.model.load(self.mlp_xml_path)
+            self.model = cv2.ml.ANN_MLP_load(self.mlp_xml_path)
             print ('Loading %s ' % self.mlp_xml_path)
         except RuntimeError:
             print ('Error loading file, check if file is found at %s' % self.mlp_xml_path)
@@ -74,15 +72,9 @@ class SelfDrivingModel(Process):
     def run(self):
         self.connect()
         print(self.motor_connection)
-        # self.motor_connection.send('start')
 
-        e1 = cv2.getTickCount()
-
-        # create and load the ann_mlp from file
-
+        # load the ann_mlp from file
         self.load_ann_mlp_model()
-
-        self.model.load(self.mlp_xml_path)
 
         # collect images for training
         print ('Start collecting images...')
@@ -139,7 +131,7 @@ class SelfDrivingModel(Process):
 
     def close(self):
         # close connection
-        # self.motor_connection.send("stop")
+        self.motor_connection.send("stop")
         self.motor_connection.close()
 
         # wait for a key and exit
