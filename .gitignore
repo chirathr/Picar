@@ -5,3 +5,7 @@ label_data/
 mlp_xml/
 *.npz
 *.xml
+*.jpg
+*.vec
+*.txt
+
