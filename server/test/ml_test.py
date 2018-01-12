@@ -5,7 +5,7 @@ import sys
 
 def check(prediction, label_truth):
 
-    print (prediction, label_truth)
+    # print (prediction, label_truth)
     prediction = int(prediction)
 
     if 3 > prediction >= 0:
@@ -24,11 +24,20 @@ else:
 
     image_data = numpy.load('../training_data/image_data/img-' + sys.argv[1] + '.npz')['image_data']
     label_data = numpy.load('../training_data/label_data/' + sys.argv[1] + '.npz')['label_data'][:-1]
+    
+    e1 = cv2.getTickCount()    
 
     correct = 0
 
     for i in range(len(label_data)):
         output = model.predict(image_data[i:i+1])[0]
         correct += check(output, label_data[i].tolist())
+        
+    e2 = cv2.getTickCount()
 
+    # calculate streaming duration
+    time0 = (e2 - e1) / cv2.getTickFrequency()
+    print ('Streaming duration:', time0)
+    print ('fps = ', len(image_data) / time0)
+    
     print ('Accuracy : %s' % str((correct * 100)/len(image_data)))

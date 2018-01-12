@@ -41,6 +41,32 @@ class MLModel(object):
 
         print 'Image loaded in :', time
 
+    def load_training_data(self, file_name):
+        # start timer
+        t0 = cv2.getTickCount()
+
+        # load all the label data
+
+        label_file = self.training_data_base_url + 'label_data/' + file_name + '.npz'
+
+        self.label_array = np.vstack((self.label_array, np.load(label_file)['label_data']))
+
+        self.image_array = np.vstack((self.image_array, np.load(
+            self.training_data_base_url + 'image_data/img-' + label_file[-11:])['image_data']))
+        print (label_file)
+
+        print ('Data loaded successfully')
+        print self.image_array.shape
+        print self.label_array.shape
+
+        # end timer
+        t1 = cv2.getTickCount()
+
+        # print the time to load the image
+        time = (t1 - t0) / cv2.getTickFrequency()
+
+        print 'Image loaded in :', time
+
     def start(self):
         """
             Takes the label_array and image_array trains the ANN_MLP network.
@@ -54,9 +80,12 @@ class MLModel(object):
         model.setTrainMethod(cv2.ml.ANN_MLP_RPROP | cv2.ml.ANN_MLP_UPDATE_WEIGHTS)
         model.setLayerSizes(np.int32([38400, 32, 3]))
         model.setActivationFunction(cv2.ml.ANN_MLP_SIGMOID_SYM)
-        model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 700, 0.0001))
+        model.setTermCriteria((cv2.TERM_CRITERIA_COUNT | cv2.TERM_CRITERIA_EPS, 500, 0.0001))
 
-        self.load_all_training_data()
+        if len(sys.argv) == 2:
+            self.load_training_data(sys.argv[1])
+        else:
+            self.load_all_training_data()
 
         mlp_file = glob.glob('./mlp_xml/*.xml')
 
