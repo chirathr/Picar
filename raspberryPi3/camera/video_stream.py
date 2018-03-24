@@ -11,6 +11,8 @@ class VideoStream(Process):
     def __init__(self, host='localhost', port=8001):
         super(VideoStream, self).__init__()
         self.address = (host, port)
+
+        # TCP socket
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection = None
 

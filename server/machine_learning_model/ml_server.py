@@ -69,6 +69,25 @@ class SelfDrivingModel(Process):
 
         return direction
 
+    @staticmethod
+    def cascade_check(image):
+        """
+        Detects if any sing board is found in frame
+        :param image: Gray scale image to check for sign boards
+        :return: 0 - no sign found, 1 - stop, 2 - speed limit, 3 - hump
+        """
+        hump_sign = cv2.CascadeClassifier('../../cascades_xml/hump_sign.xml').detectMultiScale(image, 1.3, 5)
+        speed_limit = cv2.CascadeClassifier('../../cascades_xml/speed_limit_30.xml').detectMultiScale(image, 1.3, 5)
+        stop_sign = cv2.CascadeClassifier('../../cascades_xml/stop_sign.xml').detectMultiScale(image, 1.3, 5)
+
+        if len(stop_sign) > 0:
+            return 1
+        if len(speed_limit) > 0:
+            return 2
+        if len(hump_sign) > 0:
+            return 3
+        return 0
+
     def run(self):
         self.connect()
         print(self.motor_connection)
@@ -114,6 +133,13 @@ class SelfDrivingModel(Process):
 
                     # normalise direction to prevent errors
                     direction = self.direction_normalise(prediction[0])
+
+                    # check for any sign board
+                    detected_sign_board = self.cascade_check(image)
+
+                    # stop on stop sign
+                    if detected_sign_board == 1:
+                        direction[0][0] = 0
 
                     data = str(int(direction[0][0])) + ',' + str(int(direction[0][1])) + ',' + \
                         str(int(direction[0][2])) + ',' + str(int(direction[0][3]))
